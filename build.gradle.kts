@@ -1,4 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+import java.net.InetAddress
+import java.time.Instant
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter.ISO_DATE
 
 plugins {
 	id("org.springframework.boot") version "2.2.4.RELEASE"
@@ -9,8 +14,17 @@ plugins {
 }
 
 group = "uk.gov.justice.digital.hmpps"
-version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+
+val today: Instant = Instant.now()
+val todaysDate: String = LocalDate.now().format(ISO_DATE)
+
+version = if (System.getenv().containsKey("CI")) {
+	"${todaysDate}.${System.getenv("CIRCLE_BUILD_NUM")}"
+} else {
+	todaysDate
+}
+
+java.sourceCompatibility = JavaVersion.VERSION_13
 
 repositories {
 	mavenCentral()
@@ -41,5 +55,31 @@ tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 		jvmTarget = "1.8"
+	}
+}
+
+tasks.withType<BootJar> {
+	manifest {
+		attributes["Implementation-Title"] = rootProject.name
+		attributes["Implementation-Version"] = archiveVersion
+	}
+}
+
+springBoot {
+	buildInfo {
+		properties {
+			artifact = rootProject.name
+			version = version
+			group = group
+			name = rootProject.name
+			time = today
+
+			additional = mapOf(
+					"by" to System.getProperty("user.name"),
+					"operatingSystem" to "${System.getProperty("os.name")} (${System.getProperty("os.version")})",
+					"continuousIntegration" to System.getenv().containsKey("CI"),
+					"machine" to InetAddress.getLocalHost().hostName
+			)
+		}
 	}
 }
