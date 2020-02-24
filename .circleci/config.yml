@@ -125,25 +125,25 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: Build container and publish to docker hub
-          command: |
-            APP_VERSION=$(cat ./app_version.txt)
-            docker build --rm=false . \
-               --tag "mojdigitalstudio/interventions-catalogue-service:$APP_VERSION" \
-               --label "maintainer=info@digital.justice.gov.uk" \
-               --label "app.version=$APP_VERSION" \
-               --label "build.version=$APP_VERSION" \
-               --label "build.number=$CIRCLE_BUILD_NUM" \
-               --label "build.url=$CIRCLE_BUILD_URL" \
-               --label "build.gitref=$CIRCLE_SHA1"
-
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-              # publish to docker hub as the tag
-             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-             docker tag mojdigitalstudio/interventions-catalogue-service:$APP_VERSION mojdigitalstudio/interventions-catalogue-service:latest
-             docker push mojdigitalstudio/interventions-catalogue-service:$APP_VERSION
-             docker push mojdigitalstudio/interventions-catalogue-service:latest
-            fi
+        name: Build container and publish to quay.io
+        command: |
+          APP_VERSION=$(cat ./app_version.txt)
+          IMAGE_NAME="quay.io/hmpps/interventions-catalogue-service"
+          docker build --rm=false . \
+              --tag "$IMAGE_NAME:$APP_VERSION" \
+              --label "maintainer=interventions-catalogue-team@digital.justice.gov.uk" \
+              --label "app.version=$APP_VERSION" \
+              --label "build.version=$APP_VERSION" \
+              --label "build.number=$CIRCLE_BUILD_NUM" \
+              --label "build.url=$CIRCLE_BUILD_URL" \
+              --label "build.gitref=$CIRCLE_SHA1"
+          #if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
+            # publish to quay.io as the tag
+            docker login -u $QUAYIO_USERNAME -p $QUAYIO_PASSWORD quay.io
+            docker tag $IMAGE_NAME:$APP_VERSION $IMAGE_NAME:latest
+            docker push $IMAGE_NAME:$APP_VERSION
+            docker push $IMAGE_NAME:latest
+          #fi
 
   deploy_dev:
     executor: deployer
