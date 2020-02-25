@@ -10,11 +10,7 @@ image:
   port: 3000
 
 ingress:
-  enabled: true
-  enable_whitelist: false
-  host: dev.interventions-catalogue.service.justice.gov.uk
-  cert_secret: interventions-catalogue-service-cert
-  path: /
+  enabled: false
 
 env:
   NOMIS_AUTH_URL: https://gateway.t3.nomis-api.hmpps.dsd.io/auth
