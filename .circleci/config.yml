@@ -39,7 +39,7 @@ commands:
           command: |
             APP_VERSION=$(cat ~/app/app_version.txt)
             sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" ~/git/helm_deploy/interventions-catalogue-service/Chart.yaml
-            aws secretsmanager --region ${AWS_DEFAULT_REGION} get-secret-value --secret-id ${KUBE_ENV_NAMESPACE} | jq -r .SecretString | \
+            aws secretsmanager --region ${AWS_DEFAULT_REGION} get-secret-value --secret-id ${AWS_SECRET_NAME} | jq -r .SecretString | \
             helm upgrade interventions-catalogue-service ~/git/helm_deploy/interventions-catalogue-service/. \
               --install --wait --reset-values --timeout 5m --history-max 10 \
               --namespace=${KUBE_ENV_NAMESPACE} \
