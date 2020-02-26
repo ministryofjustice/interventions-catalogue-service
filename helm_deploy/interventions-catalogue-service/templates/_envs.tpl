@@ -7,25 +7,25 @@ env:
   - name: DB_PASS
     valueFrom:
       secretKeyRef:
-        name: ic-rds-instance-output
+        name: interventions-catalogue-rds-instance-output
         key: database_password
 
   - name: DB_USER
     valueFrom:
       secretKeyRef:
-        name: ic-rds-instance-output
+        name: interventions-catalogue-rds-instance-output
         key: database_username
 
   - name: DB_SERVER
     valueFrom:
       secretKeyRef:
-        name: ic-rds-instance-output
+        name: interventions-catalogue-rds-instance-output
         key: rds_instance_address
 
   - name: DB_NAME
     valueFrom:
       secretKeyRef:
-        name: ic-rds-instance-output
+        name: interventions-catalogue-rds-instance-output
         key: database_name
 
   - name: DB_SSL_ENABLED
