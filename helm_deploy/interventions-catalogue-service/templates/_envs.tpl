@@ -28,8 +28,8 @@ env:
         name: interventions-catalogue-rds-instance-output
         key: database_name
 
-  - name: DB_SSL_ENABLED
-    value: "true"
+  - name: DB_SSLMODE
+    value: "verify-full"
 
   - name: NOMIS_AUTH_URL
     value: {{ .Values.env.NOMIS_AUTH_URL | quote }}
