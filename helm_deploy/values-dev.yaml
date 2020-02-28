@@ -7,10 +7,13 @@ image:
   repository: quay.io/hmpps/interventions-catalogue-service
   tag: latest
   pullPolicy: Always
-  port: 3000
+  port: 8080
 
 ingress:
-  enabled: false
+  enabled: true
+  enable_whitelist: false
+  host: interventions-catalogue-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk
+  path: /
 
 env:
   NOMIS_AUTH_URL: https://gateway.t3.nomis-api.hmpps.dsd.io/auth

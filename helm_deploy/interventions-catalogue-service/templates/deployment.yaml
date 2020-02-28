@@ -45,20 +45,20 @@ spec:
           ports:
             - containerPort: {{ .Values.image.port }}
               protocol: TCP
-#          livenessProbe:
-#            httpGet:
-#              path: /health
-#              port: {{ .Values.image.port }}
-#            periodSeconds: 30
-#            initialDelaySeconds: 90
-#            timeoutSeconds: 20
-#            failureThreshold: 10
-#          readinessProbe:
-#            httpGet:
-#              path: /health
-#              port: {{ .Values.image.port }}
-#            periodSeconds: 20
-#            initialDelaySeconds: 60
-#            timeoutSeconds: 30
-#            failureThreshold: 15
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: {{ .Values.image.port }}
+            periodSeconds: 30
+            initialDelaySeconds: 90
+            timeoutSeconds: 20
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: {{ .Values.image.port }}
+            periodSeconds: 20
+            initialDelaySeconds: 60
+            timeoutSeconds: 30
+            failureThreshold: 15
 {{ include "deployment.envs" . | nindent 10 }}
