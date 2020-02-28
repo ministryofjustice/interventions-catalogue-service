@@ -6,11 +6,14 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ISO_DATE
 
 plugins {
-	id("org.springframework.boot") version "2.2.4.RELEASE"
-	id("io.spring.dependency-management") version "1.0.9.RELEASE"
 	kotlin("jvm") version "1.3.61"
 	kotlin("plugin.spring") version "1.3.61"
 	kotlin("plugin.jpa") version "1.3.61"
+	id("org.springframework.boot") version "2.2.4.RELEASE"
+	id("io.spring.dependency-management") version "1.0.9.RELEASE"
+	id("org.owasp.dependencycheck") version "5.3.0"
+	id("com.github.ben-manes.versions") version "0.28.0"
+	id("com.gorylenko.gradle-git-properties") version "2.2.2"
 }
 
 group = "uk.gov.justice.digital.hmpps"
@@ -33,6 +36,8 @@ repositories {
 dependencies {
 	testRuntimeOnly("com.h2database:h2:1.4.200")
 	runtimeOnly("org.postgresql:postgresql:42.2.10")
+	runtimeOnly("org.flywaydb:flyway-core:6.2.4")
+
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
