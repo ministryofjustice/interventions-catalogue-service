@@ -12,7 +12,7 @@ image:
 ingress:
   enabled: true
   enable_whitelist: false
-  host: interventions-catalogue-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk
+  host: interventions-catalogue-service-dev.apps.live-1.cloud-platform.service.justice.gov.uk
   path: /
 
 env:
