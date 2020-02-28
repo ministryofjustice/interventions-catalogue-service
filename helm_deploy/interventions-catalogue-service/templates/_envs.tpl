@@ -31,6 +31,9 @@ env:
   - name: DB_SSLMODE
     value: "verify-full"
 
+  - name: SPRING_PROFILES_ACTIVE
+    value: "postgres,logstash"
+
   - name: NOMIS_AUTH_URL
     value: {{ .Values.env.NOMIS_AUTH_URL | quote }}
 

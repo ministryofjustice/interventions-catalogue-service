@@ -8,10 +8,11 @@ CREATE TABLE weather (
 
 CREATE TABLE cities (
     name            varchar(80),
-    location        point
+    longitude        real,
+    latitude         real
 );
 
-INSERT INTO cities VALUES ('San Francisco', '(-194.0, 53.0)');
+INSERT INTO cities VALUES ('San Francisco', -194.0, 53.0);
 
 INSERT INTO weather (city, temp_lo, temp_hi, prcp, date)
     VALUES ('San Francisco', 43, 57, 0.0, '1994-11-29');
