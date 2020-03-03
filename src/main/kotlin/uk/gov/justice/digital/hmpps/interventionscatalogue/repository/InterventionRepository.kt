@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Intervention
 
 @Repository
-interface InterventionRepository : JpaRepository<Intervention, Long> {
-}
+interface InterventionRepository : JpaRepository<Intervention, Long>

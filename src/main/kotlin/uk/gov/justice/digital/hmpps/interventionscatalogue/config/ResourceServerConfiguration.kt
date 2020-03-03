@@ -12,7 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 @EnableSwagger2
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 @EnableWebSecurity
-open class ResourceServerConfiguration : WebSecurityConfigurerAdapter() {
+class ResourceServerConfiguration : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http.headers().frameOptions().sameOrigin().and()
                 .sessionManagement()
