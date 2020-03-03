@@ -9,9 +9,9 @@ import javax.validation.Valid
 @RestController
 @RequestMapping(path = ["intervention"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class InterventionsController(private val interventionRepository: InterventionRepository) {
-    @GetMapping("/")
+    @GetMapping
     fun getInterventions(): List<Intervention> = interventionRepository.findAll()
 
-    @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE], path = ["/"])
+    @PostMapping
     fun createIntervention(@RequestBody @Valid createIntervention: Intervention) = interventionRepository.save(createIntervention)
 }
