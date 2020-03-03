@@ -1,4 +1,4 @@
-	package uk.gov.justice.digital.hmpps.interventionscatalogue
+package uk.gov.justice.digital.hmpps.interventionscatalogue
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class InterventionsCatalogueApplication
 
 fun main(args: Array<String>) {
-	runApplication<InterventionsCatalogueApplication>(*args)
+    runApplication<InterventionsCatalogueApplication>(*args)
 }
