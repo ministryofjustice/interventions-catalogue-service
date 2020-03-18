@@ -55,7 +55,6 @@ public class Intervention {
 
         return new EqualsBuilder()
                 .append(id, that.id)
-                .append(name, that.name)
                 .isEquals();
     }
 
@@ -63,7 +62,6 @@ public class Intervention {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(name)
                 .toHashCode();
     }
 }
