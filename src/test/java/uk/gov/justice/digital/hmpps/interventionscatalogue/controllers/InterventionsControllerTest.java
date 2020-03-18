@@ -44,16 +44,8 @@ class InterventionsControllerTest {
                         new Intervention(2L, "Violence Booster")));
 
         mockMvc.perform(get("/intervention").with(jwt()))
-                .andExpect(content().json("""
-                           [{
-                           "id": 1,
-                           	"name": "Skills for Life - Literacy"
-                           },
-                           {
-                           "id": 2,
-                           	"name": "Violence Booster"
-                           }]
-                        """));
+                .andExpect(content().json("[{\"id\": 1, \"name\": \"Skills for Life - Literacy\" }," +
+                                          "{\"id\": 2, \"name\": \"Violence Booster\" }]"));
     }
 
     @Test
@@ -67,18 +59,9 @@ class InterventionsControllerTest {
 
         mockMvc.perform(post("/intervention")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                           {
-                           	"name": "Skills for Life - Literacy"
-                           }
-                        """)
+                .content("{\"name\": \"Skills for Life - Literacy\"}")
                 .with(jwt()))
-                .andExpect(content().json("""
-                            {
-                                "id": 1,
-                            	"name": "Skills for Life - Literacy"
-                            }
-                        """));
+                .andExpect(content().json("    { \"id\": 1, \"name\": \"Skills for Life - Literacy\"}"));
 
         verify(interventionRepository, times(1))
                 .save(new Intervention(1L, "Skills for Life - Literacy"));

@@ -1,4 +1,4 @@
-FROM openjdk:13-slim
+FROM openjdk:11-slim
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
 RUN apt-get update && \

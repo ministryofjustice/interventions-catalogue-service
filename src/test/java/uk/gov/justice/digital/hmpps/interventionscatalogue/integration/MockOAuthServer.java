@@ -12,18 +12,12 @@ public class MockOAuthServer extends WireMockServer {
         super(9010);
     }
 
-    private static final String JWKS_RESPONSE = """
-            {
-              "keys": [
-                {
-                  "kty": "RSA",
-                  "e": "AQAB",
-                  "kid": "dev-jwk-kid",
-                  "n": "hu4ADRoY-9sYn3d0rZ3zo_iepSCDx-zOqIzb8kAIkkwfHJQJQlK-qBPwoUr07tStMxOJciOESx71DBaahvFNxrVezePQi-jEzrTmfFF08QJ8BAKjL1YEPqeUwooa1G5yZ2jh7k9lTKbrGhYNnsoNCxGeTF3iuBRl0EOGCo0elZeLfZe6n3JhaPQp5wMN8S3LAYJQ7k8qOJs35r_XXnFapOIsNV56CEPsYxx7dJ2FNzNRTDk3rVLhwaDsCRGzJwEsqt9X_WPRcrm7jDyGV2pSfk9-Pe0dey8RX196zzOGMQveYizqVMHordTDUXdZ-AEqE0BF00wRz8vuqoAWQQKH_w"
-                }
-              ]
-            }
-            """;
+    private static final String JWKS_RESPONSE = "{\"keys\": [{\n" +
+                                                "\"kty\": \"RSA\",\n" +
+                                                "\"e\": \"AQAB\",\n" +
+                                                "\"kid\": \"dev-jwk-kid\",\n" +
+                                                "\"n\": \"hu4ADRoY-9sYn3d0rZ3zo_iepSCDx-zOqIzb8kAIkkwfHJQJQlK-qBPwoUr07tStMxOJciOESx71DBaahvFNxrVezePQi-jEzrTmfFF08QJ8BAKjL1YEPqeUwooa1G5yZ2jh7k9lTKbrGhYNnsoNCxGeTF3iuBRl0EOGCo0elZeLfZe6n3JhaPQp5wMN8S3LAYJQ7k8qOJs35r_XXnFapOIsNV56CEPsYxx7dJ2FNzNRTDk3rVLhwaDsCRGzJwEsqt9X_WPRcrm7jDyGV2pSfk9-Pe0dey8RX196zzOGMQveYizqVMHordTDUXdZ-AEqE0BF00wRz8vuqoAWQQKH_w\"\n" +
+                                                "}]}";
 
     public void stubJwksSet() {
         stubFor(
