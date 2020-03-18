@@ -9,7 +9,7 @@ plugins {
 
 group = 'uk.gov.justice.digital.hmpps'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '13'
+sourceCompatibility = "13 (Preview)"
 
 def today = Instant.now()
 def todaysDate = LocalDate.now().format('yyyy-MM-dd')
@@ -20,6 +20,14 @@ jar {
     manifest {
         attributes 'Implementation-Title': rootProject.name, 'Implementation-Version': archiveVersion
     }
+}
+
+tasks.withType(JavaCompile).each {
+    it.options.compilerArgs.add('--enable-preview')
+}
+
+test {
+    jvmArgs(['--enable-preview'])
 }
 
 springBoot {
@@ -55,11 +63,15 @@ dependencies {
     implementation'org.springframework.boot:spring-boot-starter-web'
     implementation'io.springfox:springfox-swagger2:2.9.2'
     implementation'io.springfox:springfox-swagger-ui:2.9.2'
+    compile 'org.apache.commons:commons-lang3:3.9'
+
+    compile 'com.squareup.okhttp3:mockwebserver'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation'org.springframework.security:spring-security-test'
+    testImplementation'com.github.tomakehurst:wiremock-standalone:2.26.0'
 }
 
 test {
