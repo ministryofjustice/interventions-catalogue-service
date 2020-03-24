@@ -152,7 +152,7 @@ jobs:
               docker push $IMAGE_NAME:latest
             #fi
       - snyk/scan:
-          docker-image-name: 'mojdigitalstudio/interventions-catalogue-service:latest'
+          docker-image-name: 'quay.io/hmpps/interventions-catalogue-service:latest'
           target-file: 'Dockerfile'
           fail-on-issues: false
           monitor-on-build: true
