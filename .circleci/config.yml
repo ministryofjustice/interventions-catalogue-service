@@ -73,6 +73,7 @@ orbs:
   kubernetes: circleci/kubernetes@0.10.1
   helm: circleci/helm@0.2.3
   owasp: entur/owasp@0.0.6
+  snyk: snyk/snyk@0.0.9
 
 jobs:
   build:
@@ -87,6 +88,12 @@ jobs:
           environment:
             SQS_PROVIDER: localstack
           command: ./gradlew build
+      - snyk/scan:
+          fail-on-issues: false
+          monitor-on-build: true
+          additional-arguments: "--configuration-matching='^((?!test).)*$'"
+          project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}'
+          organization: 'digital-probation-services'
       - run:
           name: Record the Application Version
           command: |
@@ -144,6 +151,13 @@ jobs:
               docker push $IMAGE_NAME:$APP_VERSION
               docker push $IMAGE_NAME:latest
             #fi
+      - snyk/scan:
+          docker-image-name: 'mojdigitalstudio/interventions-catalogue-service:latest'
+          target-file: 'Dockerfile'
+          fail-on-issues: false
+          monitor-on-build: true
+          project: '${CIRCLE_PROJECT_REPONAME}/latest'
+          organization: 'digital-probation-services'
 
   deploy_dev:
     executor: deployer
