@@ -11,5 +11,5 @@ import lombok.Value;
 @AllArgsConstructor
 @Builder
 public class CreateProvider {
-    String name;
+    private String name;
 }

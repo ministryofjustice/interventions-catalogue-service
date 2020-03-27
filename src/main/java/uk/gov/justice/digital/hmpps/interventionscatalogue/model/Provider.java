@@ -6,11 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,13 +23,17 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Provider {
     @Id
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
-    UUID id;
-    String name;
+    private UUID id;
+    private String name;
+
+    @CreatedDate
+    private Date createdDate;
 
     @ManyToMany(mappedBy = "interventionSubTypes")
-    Set<InterventionType> interventionTypes;
+    private Set<InterventionType> interventionTypes;
 }

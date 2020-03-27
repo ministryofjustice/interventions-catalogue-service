@@ -2,7 +2,8 @@ DROP TABLE intervention;
 
 CREATE TABLE provider (
     id uuid PRIMARY KEY,
-    name CHARACTER VARYING(255) NOT NULL
+    name CHARACTER VARYING(255) NOT NULL,
+    created_date datetime NOT NULL
 );
 
 CREATE TABLE intervention_type (

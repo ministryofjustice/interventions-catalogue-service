@@ -17,8 +17,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InterventionSubTypeDto {
-    UUID id;
-    String name;
+    private UUID id;
+    private String name;
 
     public InterventionSubTypeDto(InterventionSubType interventionSubType) {
         this.id = interventionSubType.getId();

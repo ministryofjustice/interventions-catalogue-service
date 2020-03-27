@@ -12,5 +12,5 @@ import lombok.NonNull;
 @Builder
 public class CreateInterventionType {
     @NonNull
-    String name;
+    private String name;
 }

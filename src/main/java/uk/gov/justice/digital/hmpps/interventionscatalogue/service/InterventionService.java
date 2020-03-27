@@ -21,6 +21,7 @@ public class InterventionService {
     ProviderRepository providerRepository;
     InterventionTypeRepository interventionTypeRepository;
     InterventionSubTypeRepository interventionSubTypeRepository;
+    SnsService snsService;
 
     public InterventionService(ProviderRepository providerRepository,
                                InterventionTypeRepository interventionTypeRepository,

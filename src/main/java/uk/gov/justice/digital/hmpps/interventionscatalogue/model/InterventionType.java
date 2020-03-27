@@ -26,13 +26,13 @@ public class InterventionType {
     @Id
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
-    UUID id;
-    String name;
+    private UUID id;
+    private String name;
 
     @ManyToMany
     @JoinTable(name = "provider_intervention_type", joinColumns = @JoinColumn(name="intervention_type_id"), inverseJoinColumns = @JoinColumn(name="provider_id"))
-    Set<Provider> providers;
+    private Set<Provider> providers;
 
     @OneToMany(mappedBy = "interventionType")
-    Set<InterventionSubType> interventionSubTypes;
+    private Set<InterventionSubType> interventionSubTypes;
 }

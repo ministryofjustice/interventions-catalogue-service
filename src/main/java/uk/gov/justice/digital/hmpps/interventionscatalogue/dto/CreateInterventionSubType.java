@@ -15,6 +15,6 @@ import java.util.UUID;
 @Builder
 @With
 public class CreateInterventionSubType {
-    UUID interventionTypeId;
-    String name;
+    private UUID interventionTypeId;
+    private String name;
 }

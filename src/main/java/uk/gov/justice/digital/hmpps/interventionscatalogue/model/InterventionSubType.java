@@ -22,9 +22,9 @@ public class InterventionSubType {
     @Id
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
-    UUID id;
-    String name;
+    private UUID id;
+    private String name;
 
     @ManyToOne
-    InterventionType interventionType;
+    private InterventionType interventionType;
 }

@@ -14,6 +14,6 @@ import java.util.UUID;
 @Builder
 @With
 public class CreateProviderTypeLink {
-    UUID providerId;
-    UUID interventionTypeId;
+    private UUID providerId;
+    private UUID interventionTypeId;
 }

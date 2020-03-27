@@ -16,8 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProviderDto {
-    UUID id;
-    String name;
+    private UUID id;
+    private String name;
 
     public ProviderDto(Provider provider) {
         this.id = provider.getId();
