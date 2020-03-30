@@ -3,11 +3,13 @@ package uk.gov.justice.digital.hmpps.interventionscatalogue.controllers;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProvider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProvider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.InterventionService;
 
 import javax.validation.Valid;
@@ -31,5 +33,10 @@ class ProviderController {
     @PostMapping
     ProviderDto createProvider(@RequestBody @Valid CreateProvider createProvider) {
         return new ProviderDto(interventionService.createProvider(createProvider));
+    }
+
+    @PutMapping(path="{providerId}")
+    ProviderDto updateProvider(@RequestBody @Valid UpdateProvider updateProvider) {
+        return new ProviderDto(interventionService.updateProvider(updateProvider));
     }
 }

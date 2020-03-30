@@ -14,6 +14,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -23,16 +25,21 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class})
 public class Provider {
     @Id
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private UUID id;
+
+    @GeneratedValue(generator="uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private UUID version;
+
     private String name;
 
     @CreatedDate
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @ManyToMany(mappedBy = "interventionSubTypes")
     private Set<InterventionType> interventionTypes;

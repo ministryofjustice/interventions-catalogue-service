@@ -1,10 +1,12 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProvider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLink;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProvider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class InterventionService {
 
     ProviderRepository providerRepository;
@@ -25,10 +28,12 @@ public class InterventionService {
 
     public InterventionService(ProviderRepository providerRepository,
                                InterventionTypeRepository interventionTypeRepository,
-                               InterventionSubTypeRepository interventionSubTypeRepository) {
+                               InterventionSubTypeRepository interventionSubTypeRepository,
+                               SnsService snsService) {
         this.providerRepository = providerRepository;
         this.interventionTypeRepository = interventionTypeRepository;
         this.interventionSubTypeRepository = interventionSubTypeRepository;
+        this.snsService = snsService;
     }
 
     public List<InterventionType> getAllInterventionTypes() {
@@ -39,9 +44,9 @@ public class InterventionService {
         return providerRepository.findAll();
     }
 
-    public Provider createProvider(CreateProvider provider) {
+    public Provider createProvider(CreateProvider createProvider) {
         return providerRepository.save(Provider.builder()
-                .name(provider.getName())
+                .name(createProvider.getName())
                 .build());
     }
 
@@ -72,5 +77,14 @@ public class InterventionService {
 
     public InterventionType getInterventionType(UUID interventionTypeId) {
         return interventionTypeRepository.getOne(interventionTypeId);
+    }
+
+    public Provider updateProvider(UpdateProvider updateProvider) {
+        var existingProvider = providerRepository.getOne(updateProvider.getId());
+
+        var newProviderVersion = Provider.builder().
+
+        providerRepository.save()
+        return null;
     }
 }

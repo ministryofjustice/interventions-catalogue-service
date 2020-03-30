@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.core.NotificationMessagingTemplate;
 import org.springframework.cloud.aws.messaging.core.TopicMessageChannel;
 import org.springframework.stereotype.Service;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.event.InterventionReferenceDataEvent;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
 
 @Service
 @Slf4j
@@ -30,7 +30,7 @@ public class SnsService {
         this.objectMapper = objectMapper;
     }
 
-    public void sendEvent(final InterventionReferenceDataEvent payload) {
+    public void sendEvent(final Provider payload) {
         try {
             topicTemplate.convertAndSend(
                     new TopicMessageChannel(amazonSns, topicArn),

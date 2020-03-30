@@ -13,7 +13,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 @EnableWebSecurity
-@EnableJpaAuditing
 class ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {

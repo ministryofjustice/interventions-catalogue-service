@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class LocalstackConfiguration {
-
     @Bean
     @ConditionalOnProperty(name = "sns.provider", havingValue = "localstack", matchIfMissing = true)
     @Primary
