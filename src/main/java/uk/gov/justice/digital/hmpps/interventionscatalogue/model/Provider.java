@@ -32,9 +32,9 @@ public class Provider {
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private UUID id;
 
-    @GeneratedValue(generator="uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private UUID version;
+//    @GeneratedValue(generator="uuid")
+//    @GenericGenerator(name="system-uuid", strategy = "uuid")
+//    private UUID version;
 
     private String name;
 

@@ -7,6 +7,7 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventio
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProvider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLink;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProvider;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.event.CreateInterventionDataEvent;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
@@ -44,6 +45,7 @@ public class InterventionService {
         return providerRepository.findAll();
     }
 
+    @CreateInterventionDataEvent
     public Provider createProvider(CreateProvider createProvider) {
         return providerRepository.save(Provider.builder()
                 .name(createProvider.getName())
@@ -82,9 +84,6 @@ public class InterventionService {
     public Provider updateProvider(UpdateProvider updateProvider) {
         var existingProvider = providerRepository.getOne(updateProvider.getId());
 
-        var newProviderVersion = Provider.builder().
-
-        providerRepository.save()
         return null;
     }
 }
