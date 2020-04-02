@@ -73,7 +73,7 @@ orbs:
   kubernetes: circleci/kubernetes@0.10.1
   helm: circleci/helm@0.2.3
   owasp: entur/owasp@0.0.6
-  snyk: snyk/snyk@0.0.9
+  snyk: snyk/snyk@0.0.10
 
 jobs:
   build:
