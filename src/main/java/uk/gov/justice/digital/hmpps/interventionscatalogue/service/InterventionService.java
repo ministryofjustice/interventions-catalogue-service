@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.service;
 
+import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubType;
@@ -16,6 +17,7 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.repository.Interventi
 import uk.gov.justice.digital.hmpps.interventionscatalogue.repository.ProviderRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -82,7 +84,7 @@ public class InterventionService {
     }
 
     public Provider updateProvider(UpdateProvider updateProvider) {
-        var existingProvider = providerRepository.getOne(updateProvider.getId());
+        Optional<Revision<Integer, Provider>> existingProvider = providerRepository.findLastChangeRevision(updateProvider.getId());
 
         return null;
     }

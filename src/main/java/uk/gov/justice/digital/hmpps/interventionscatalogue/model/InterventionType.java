@@ -1,11 +1,11 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,11 +17,14 @@ import javax.persistence.OneToMany;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
+
 @Data
 @Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Audited
 public class InterventionType {
     @Id
     @GeneratedValue(generator="uuid")

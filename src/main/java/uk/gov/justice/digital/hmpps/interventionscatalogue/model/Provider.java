@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -20,21 +21,20 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
+
 @Builder
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners({AuditingEntityListener.class})
+@Audited
 public class Provider {
     @Id
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private UUID id;
-
-//    @GeneratedValue(generator="uuid")
-//    @GenericGenerator(name="system-uuid", strategy = "uuid")
-//    private UUID version;
 
     private String name;
 
