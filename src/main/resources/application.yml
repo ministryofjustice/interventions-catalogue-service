@@ -25,6 +25,8 @@ spring:
     show-sql: true
     properties:
       hibernate:
+#        envers:
+#          do_not_audit_optimistic_locking_field: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           lob:

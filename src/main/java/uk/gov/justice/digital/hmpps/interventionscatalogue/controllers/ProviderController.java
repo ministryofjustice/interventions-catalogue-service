@@ -1,7 +1,9 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.controllers;
 
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +16,7 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.service.InterventionS
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,7 +39,14 @@ class ProviderController {
     }
 
     @PutMapping(path="{providerId}")
-    ProviderDto updateProvider(@RequestBody @Valid UpdateProvider updateProvider) {
+    ProviderDto updateProvider(@PathVariable("providerId") UUID providerId, @RequestBody @Valid UpdateProvider updateProvider) {
+        updateProvider.setId(providerId);
         return new ProviderDto(interventionService.updateProvider(updateProvider));
+    }
+
+    @DeleteMapping(path="{providerId}")
+    ProviderDto deleteProvider(@PathVariable("providerId") UUID providerId) {
+        interventionService.deleteProvider(providerId);
+        return ProviderDto.builder().id(providerId).build();
     }
 }

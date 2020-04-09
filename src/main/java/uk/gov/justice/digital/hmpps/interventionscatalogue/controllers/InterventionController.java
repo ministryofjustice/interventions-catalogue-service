@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionType;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLink;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionSubTypeDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionTypeDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;
@@ -69,8 +69,8 @@ class InterventionController {
 
     @PostMapping(path="{interventionTypeId}/provider")
     InterventionTypeDto linkProviderToType(@PathVariable("interventionTypeId") UUID interventionTypeId,
-                                   @RequestBody @Valid CreateProviderTypeLink createProviderTypeLink) {
+                                   @RequestBody @Valid CreateProviderTypeLinkDto createProviderTypeLinkDto) {
 
-        return new InterventionTypeDto(interventionService.createProviderTypeLink(createProviderTypeLink.withInterventionTypeId(interventionTypeId)));
+        return new InterventionTypeDto(interventionService.createProviderTypeLink(createProviderTypeLinkDto.withInterventionTypeId(interventionTypeId)));
     }
 }

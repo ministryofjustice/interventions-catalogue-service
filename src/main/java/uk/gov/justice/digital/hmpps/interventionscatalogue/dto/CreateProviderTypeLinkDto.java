@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @With
-public class CreateProviderTypeLink {
+public class CreateProviderTypeLinkDto {
     private UUID providerId;
     private UUID interventionTypeId;
 }

@@ -1,12 +1,14 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.service;
 
+import lombok.NonNull;
 import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProvider;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLink;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderResponse;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProvider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.event.CreateInterventionDataEvent;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
@@ -48,18 +50,40 @@ public class InterventionService {
     }
 
     @CreateInterventionDataEvent
-    public Provider createProvider(CreateProvider createProvider) {
-        return providerRepository.save(Provider.builder()
+    public CreateProviderResponse createProvider(CreateProvider createProvider) {
+        Provider createdProvider =  providerRepository.save(Provider.builder()
                 .name(createProvider.getName())
                 .build());
+
+        return new CreateProviderResponse(createdProvider);
     }
 
+    @CreateInterventionDataEvent
+    public Provider updateProvider(UpdateProvider updateProvider) {
+        Optional<Revision<Integer, Provider>> existingProvider = providerRepository.findLastChangeRevision(updateProvider.getId());
+
+        if (existingProvider.isPresent()) {
+            Provider provider = existingProvider.get().getEntity();
+            provider.setName(updateProvider.getName());
+            return providerRepository.save(provider);
+        }
+
+        throw new IllegalArgumentException();
+    }
+
+    @CreateInterventionDataEvent
+    public void deleteProvider(UUID providerId) {
+        providerRepository.deleteById(providerId);
+    }
+
+    @CreateInterventionDataEvent
     public InterventionType createInterventionType(CreateInterventionType createInterventionType) {
         return interventionTypeRepository.save(InterventionType.builder()
                 .name(createInterventionType.getName())
                 .build());
     }
 
+    @CreateInterventionDataEvent
     public InterventionSubType createInterventionSubType(CreateInterventionSubType createInterventionSubType) {
         InterventionType interventionType = interventionTypeRepository.getOne(createInterventionSubType.getInterventionTypeId());
         InterventionSubType interventionSubType = InterventionSubType.builder()
@@ -69,9 +93,10 @@ public class InterventionService {
         return interventionSubTypeRepository.save(interventionSubType);
     }
 
-    public InterventionType createProviderTypeLink(CreateProviderTypeLink createProviderTypeLink) {
-        Provider provider = providerRepository.getOne(createProviderTypeLink.getProviderId());
-        InterventionType interventionType = interventionTypeRepository.getOne(createProviderTypeLink.getInterventionTypeId());
+    @CreateInterventionDataEvent
+    public InterventionType createProviderTypeLink(CreateProviderTypeLinkDto createProviderTypeLinkDto) {
+        Provider provider = providerRepository.findLastChangeRevision(createProviderTypeLinkDto.getProviderId()).get().getEntity();
+        InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(createProviderTypeLinkDto.getInterventionTypeId()).get().getEntity();
 
         System.out.println("id: " + interventionType.getId());
         interventionType.getProviders().add(provider);
@@ -82,10 +107,5 @@ public class InterventionService {
     public InterventionType getInterventionType(UUID interventionTypeId) {
         return interventionTypeRepository.getOne(interventionTypeId);
     }
-
-    public Provider updateProvider(UpdateProvider updateProvider) {
-        Optional<Revision<Integer, Provider>> existingProvider = providerRepository.findLastChangeRevision(updateProvider.getId());
-
-        return null;
-    }
 }
+

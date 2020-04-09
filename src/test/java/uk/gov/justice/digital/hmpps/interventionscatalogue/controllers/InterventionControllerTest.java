@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionType;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLink;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
@@ -139,7 +139,7 @@ class InterventionControllerTest {
 
     @Test
     void linkProviderToType() throws Exception {
-        when(interventionService.createProviderTypeLink(any(CreateProviderTypeLink.class))).thenReturn(InterventionType.builder()
+        when(interventionService.createProviderTypeLink(any(CreateProviderTypeLinkDto.class))).thenReturn(InterventionType.builder()
                 .id(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"))
                 .name("Skills for Life - Literacy")
                 .build());
@@ -151,7 +151,7 @@ class InterventionControllerTest {
                 .andExpect(content().json("    { \"id\": \"4b2f8eed-e426-4555-82b5-55ad103c235f\", \"name\": \"Skills for Life - Literacy\"}"));
 
         verify(interventionService, times(1))
-                .createProviderTypeLink(CreateProviderTypeLink.builder()
+                .createProviderTypeLink(CreateProviderTypeLinkDto.builder()
                         .providerId(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
                         .interventionTypeId(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"))
                         .build()

@@ -3,33 +3,35 @@ package uk.gov.justice.digital.hmpps.interventionscatalogue.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+import javax.persistence.Version;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Audited
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Audited
-public class InterventionSubType {
+@MappedSuperclass
+public class BaseEntity {
     @Id
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private UUID id;
-    private String name;
+    protected UUID id;
 
-    @ManyToOne
-    @EqualsAndHashCode.Exclude()
-    @ToString.Exclude
-    private InterventionType interventionType;
+    @CreatedDate
+    protected LocalDateTime createdDate;
+
+    @Transient
+    protected Long version;
 }

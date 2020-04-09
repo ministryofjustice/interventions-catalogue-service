@@ -3,7 +3,9 @@ package uk.gov.justice.digital.hmpps.interventionscatalogue.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
@@ -16,8 +18,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.util.Set;
 import java.util.UUID;
-
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Data
 @Builder
@@ -34,6 +34,8 @@ public class InterventionType {
 
     @ManyToMany
     @JoinTable(name = "provider_intervention_type", joinColumns = @JoinColumn(name="intervention_type_id"), inverseJoinColumns = @JoinColumn(name="provider_id"))
+    @EqualsAndHashCode.Exclude()
+    @ToString.Exclude
     private Set<Provider> providers;
 
     @OneToMany(mappedBy = "interventionType")

@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProvider;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.InterventionService;
 
@@ -50,7 +51,7 @@ class ProviderControllerTest {
 
     @Test
     void createProvider() throws Exception {
-        when(interventionService.createProvider(any(CreateProvider.class))).thenReturn(Provider.builder()
+        when(interventionService.createProvider(any(CreateProvider.class))).thenReturn(CreateProviderResponse.builder()
                 .id(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
                 .name("North West CRC")
                 .build());
