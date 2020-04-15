@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
@@ -32,12 +33,14 @@ public class InterventionType {
     private UUID id;
     private String name;
 
+    @Singular
     @ManyToMany
     @JoinTable(name = "provider_intervention_type", joinColumns = @JoinColumn(name="intervention_type_id"), inverseJoinColumns = @JoinColumn(name="provider_id"))
     @EqualsAndHashCode.Exclude()
     @ToString.Exclude
     private Set<Provider> providers;
 
+    @Singular
     @OneToMany(mappedBy = "interventionType")
     private Set<InterventionSubType> interventionSubTypes;
 }

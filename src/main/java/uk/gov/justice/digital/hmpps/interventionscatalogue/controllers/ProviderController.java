@@ -33,6 +33,11 @@ class ProviderController {
         return interventionService.getAllProviders().stream().map(ProviderDto::new).collect(Collectors.toList());
     }
 
+    @GetMapping(path="{providerId}")
+    ProviderDto getProvider(@PathVariable("providerId") UUID providerId) {
+        return new ProviderDto(interventionService.getProvider(providerId));
+    }
+
     @PostMapping
     ProviderDto createProvider(@RequestBody @Valid CreateProvider createProvider) {
         return new ProviderDto(interventionService.createProvider(createProvider));
@@ -45,8 +50,7 @@ class ProviderController {
     }
 
     @DeleteMapping(path="{providerId}")
-    ProviderDto deleteProvider(@PathVariable("providerId") UUID providerId) {
+    void deleteProvider(@PathVariable("providerId") UUID providerId) {
         interventionService.deleteProvider(providerId);
-        return ProviderDto.builder().id(providerId).build();
     }
 }

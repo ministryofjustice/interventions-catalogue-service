@@ -105,7 +105,37 @@ public class InterventionService {
     }
 
     public InterventionType getInterventionType(UUID interventionTypeId) {
-        return interventionTypeRepository.getOne(interventionTypeId);
+        return interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
+    }
+
+    public InterventionType deleteProviderTypeLink(UUID interventionTypeId, UUID providerId) {
+        InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
+        Optional<Provider> provider = interventionType.getProviders().stream().filter(p -> p.getId().equals(providerId)).findAny();
+        if (provider.isPresent()) {
+            interventionType.getProviders().remove(provider);
+            interventionTypeRepository.save(interventionType);
+        }
+        return interventionType;
+    }
+
+    public InterventionType deleteInterventionSubtype(UUID interventionTypeId, UUID subtypeId) {
+        InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
+        Optional<InterventionSubType> subtype = interventionType.getInterventionSubTypes().stream().filter(p -> p.getId().equals(subtypeId)).findAny();
+        if (subtype.isPresent()) {
+            interventionType.getInterventionSubTypes().remove(subtype);
+            interventionTypeRepository.save(interventionType);
+        }
+        return interventionType;
+    }
+
+    public InterventionType deleteInterventionType(UUID interventionTypeId) {
+        InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
+        interventionTypeRepository.delete(interventionType);
+        return null;
+    }
+
+    public Provider getProvider(UUID providerId) {
+        return providerRepository.findLastChangeRevision(providerId).get().getEntity();
     }
 }
 

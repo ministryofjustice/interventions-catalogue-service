@@ -17,8 +17,8 @@ CREATE TABLE provider (
 
 CREATE TABLE provider_aud (
     id uuid NOT NULL,
-    name CHARACTER VARYING(255) NOT NULL,
-    created_date timestamp with time zone NOT NULL,
+    name CHARACTER VARYING(255),
+    created_date timestamp with time zone,
     rev integer NOT NULL,
     revtype integer,
     PRIMARY KEY ( id, REV ),
@@ -32,7 +32,7 @@ CREATE TABLE intervention_type (
 
 CREATE TABLE intervention_type_aud (
     id uuid NOT NULL,
-    name CHARACTER VARYING(255) NOT NULL,
+    name CHARACTER VARYING(255),
     rev integer NOT NULL,
     revtype integer,
     PRIMARY KEY ( id, REV ),

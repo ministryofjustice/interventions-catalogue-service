@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,6 +24,7 @@ import java.util.Set;
 public class Provider extends BaseEntity {
     private String name;
 
+    @Singular
     @ManyToMany(mappedBy = "providers")
     private Set<InterventionType> interventionTypes;
 }

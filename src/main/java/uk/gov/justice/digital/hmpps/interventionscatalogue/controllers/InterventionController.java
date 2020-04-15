@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.controllers;
 
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,9 +38,19 @@ class InterventionController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping(path="{interventionTypeId}")
+    InterventionTypeDto getIntervention(@PathVariable("interventionTypeId") UUID interventionTypeId) {
+        return new InterventionTypeDto(interventionService.getInterventionType(interventionTypeId));
+    }
+
     @PostMapping
     InterventionTypeDto createIntervention(@RequestBody @Valid CreateInterventionType createInterventionType) {
         return new InterventionTypeDto(interventionService.createInterventionType(createInterventionType));
+    }
+
+    @DeleteMapping(path="{interventionTypeId}")
+    void deleteType(@PathVariable("interventionTypeId") UUID interventionTypeId) {
+        interventionService.deleteInterventionType(interventionTypeId);
     }
 
     @GetMapping(path="{interventionTypeId}/subtype")
@@ -51,6 +62,20 @@ class InterventionController {
                 .collect(Collectors.toList());
     }
 
+    @PostMapping(path="{interventionTypeId}/subtype")
+    InterventionSubTypeDto createSubType(@PathVariable("interventionTypeId") UUID interventionTypeId,
+                                         @RequestBody @Valid CreateInterventionSubType createInterventionSubType) {
+
+        return new InterventionSubTypeDto(interventionService.createInterventionSubType(createInterventionSubType.withInterventionTypeId(interventionTypeId)));
+    }
+
+    @DeleteMapping(path="{interventionTypeId}/subtype/{subtypeId}")
+    InterventionTypeDto deleteSubtypeFromType(@PathVariable("interventionTypeId") UUID interventionTypeId,
+                                               @PathVariable("subtypeId") UUID subtypeId) {
+
+        return new InterventionTypeDto(interventionService.deleteInterventionSubtype(interventionTypeId, subtypeId));
+    }
+
     @GetMapping(path="{interventionTypeId}/provider")
     List<ProviderDto> getInterventionProviders(@PathVariable("interventionTypeId") UUID interventionTypeId) {
 
@@ -60,17 +85,17 @@ class InterventionController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping(path="{interventionTypeId}/subtype")
-    InterventionSubTypeDto createSubType(@PathVariable("interventionTypeId") UUID interventionTypeId,
-                                      @RequestBody @Valid CreateInterventionSubType createInterventionSubType) {
-
-        return new InterventionSubTypeDto(interventionService.createInterventionSubType(createInterventionSubType.withInterventionTypeId(interventionTypeId)));
-    }
-
     @PostMapping(path="{interventionTypeId}/provider")
     InterventionTypeDto linkProviderToType(@PathVariable("interventionTypeId") UUID interventionTypeId,
                                    @RequestBody @Valid CreateProviderTypeLinkDto createProviderTypeLinkDto) {
 
         return new InterventionTypeDto(interventionService.createProviderTypeLink(createProviderTypeLinkDto.withInterventionTypeId(interventionTypeId)));
+    }
+
+    @DeleteMapping(path="{interventionTypeId}/provider/{providerId}")
+    InterventionTypeDto deleteProviderFromType(@PathVariable("interventionTypeId") UUID interventionTypeId,
+                                               @PathVariable("providerId") UUID providerId) {
+
+        return new InterventionTypeDto(interventionService.deleteProviderTypeLink(interventionTypeId, providerId));
     }
 }
