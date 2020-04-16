@@ -7,6 +7,7 @@ import org.hibernate.event.spi.PersistEvent;
 import org.hibernate.event.spi.PersistEventListener;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.SnsService;
@@ -16,6 +17,7 @@ import javax.persistence.EntityManagerFactory;
 import java.util.Map;
 
 @Component
+@ConditionalOnProperty(name = "interventions.repositoryevents", havingValue = "true")
 public class ProviderPersistEventListener implements PersistEventListener {
 
     @Autowired

@@ -32,6 +32,7 @@ public class SnsService {
 
     public void sendEvent(final Provider payload) {
         try {
+            log.info("Sending message");
             topicTemplate.convertAndSend(
                     new TopicMessageChannel(amazonSns, topicArn),
                     objectMapper.writeValueAsString(payload)
