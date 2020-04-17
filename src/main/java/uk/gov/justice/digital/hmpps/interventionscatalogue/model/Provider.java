@@ -22,9 +22,9 @@ import java.util.Set;
 @EntityListeners({AuditingEntityListener.class})
 @Audited
 public class Provider extends BaseEntity {
-    private String name;
+    protected String name;
 
     @Singular
     @ManyToMany(mappedBy = "providers")
-    private Set<InterventionType> interventionTypes;
+    protected Set<InterventionType> interventionTypes;
 }

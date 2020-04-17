@@ -20,12 +20,18 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProviderDto {
     private UUID id;
+    private Long version;
     private String name;
     private LocalDateTime createdDate;
 
-    public ProviderDto(Provider provider) {
+    public ProviderDto(final Provider provider) {
         this.id = provider.getId();
         this.name = provider.getName();
         this.createdDate = provider.getCreatedDate();
+    }
+
+    public ProviderDto(final Provider provider, final Long version) {
+        this(provider);
+        this.version = version;
     }
 }

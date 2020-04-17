@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.core.NotificationMessagingTemplate;
 import org.springframework.cloud.aws.messaging.core.TopicMessageChannel;
 import org.springframework.stereotype.Service;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.model.BaseEntity;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
 
 @Service
@@ -30,7 +31,7 @@ public class SnsService {
         this.objectMapper = objectMapper;
     }
 
-    public void sendEvent(final Provider payload) {
+    public void sendEvent(final BaseEntity payload) {
         try {
             log.info("Sending message");
             topicTemplate.convertAndSend(
