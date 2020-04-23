@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -14,9 +14,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProviderDto {
+public class InterventionTypeResponse {
     private UUID id;
-    private Long version;
     private String name;
-    private LocalDateTime createdDate;
+    private List<InterventionSubTypeResponse> interventionSubTypes;
 }

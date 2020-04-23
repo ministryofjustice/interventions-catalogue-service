@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.jpa;
 
-import lombok.extern.flogger.Flogger;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.envers.EntityTrackingRevisionListener;
 import org.hibernate.envers.RevisionType;

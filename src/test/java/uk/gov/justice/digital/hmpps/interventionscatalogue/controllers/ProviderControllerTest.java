@@ -9,8 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProvider;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderResponse;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEventType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.InterventionService;
 
@@ -51,10 +52,10 @@ class ProviderControllerTest {
 
     @Test
     void createProvider() throws Exception {
-        when(interventionService.createProvider(any(CreateProvider.class))).thenReturn(CreateProviderResponse.builder()
+        when(interventionService.createProvider(any(CreateProviderRequest.class))).thenReturn(new DataEvent<Provider>(Provider.builder()
                 .id(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
                 .name("North West CRC")
-                .build());
+                .build(), DataEventType.CREATED));
 
         mockMvc.perform(post("/provider")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -63,7 +64,7 @@ class ProviderControllerTest {
                 .andExpect(content().json("    { \"id\": \"2e18d2f6-2a38-4cdf-a798-00b0a2e6994d\", \"name\": \"North West CRC\"}"));
 
         verify(interventionService, times(1))
-                .createProvider(CreateProvider.builder()
+                .createProvider(CreateProviderRequest.builder()
                         .name("North West CRC")
                         .build()
                 );

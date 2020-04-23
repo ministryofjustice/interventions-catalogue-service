@@ -27,12 +27,14 @@ CREATE TABLE provider_aud (
 
 CREATE TABLE intervention_type (
     id uuid PRIMARY KEY,
-    name CHARACTER VARYING(255) NOT NULL
+    name CHARACTER VARYING(255) NOT NULL,
+    created_date timestamp with time zone NOT NULL
 );
 
 CREATE TABLE intervention_type_aud (
     id uuid NOT NULL,
     name CHARACTER VARYING(255),
+    created_date timestamp with time zone,
     rev integer NOT NULL,
     revtype integer,
     PRIMARY KEY ( id, REV ),
@@ -43,13 +45,15 @@ CREATE TABLE intervention_sub_type (
     id uuid PRIMARY KEY,
     intervention_type_id uuid NOT NULL,
     name CHARACTER VARYING(255) NOT NULL,
+    created_date timestamp with time zone NOT NULL,
     CONSTRAINT intervention_sub_type_intervention_type FOREIGN KEY (intervention_type_id) REFERENCES intervention_type (id)
 );
 
 CREATE TABLE intervention_sub_type_aud (
     id uuid NOT NULL,
-    intervention_type_id uuid NOT NULL,
-    name CHARACTER VARYING(255) NOT NULL,
+    intervention_type_id uuid,
+    name CHARACTER VARYING(255),
+    created_date timestamp with time zone,
 	rev integer NOT NULL,
     revtype integer,
     PRIMARY KEY ( id, REV ),

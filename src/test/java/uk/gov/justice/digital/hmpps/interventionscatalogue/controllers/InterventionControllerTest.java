@@ -9,9 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubType;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionType;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkDto;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubTypeRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionTypeRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEventType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
@@ -56,10 +58,10 @@ class InterventionControllerTest {
 
     @Test
     void createInterventionCallsSaveAndReturnsIntervention() throws Exception {
-        when(interventionService.createInterventionType(any(CreateInterventionType.class))).thenReturn(InterventionType.builder()
+        when(interventionService.createInterventionType(any(CreateInterventionTypeRequest.class))).thenReturn(new DataEvent<>(InterventionType.builder()
                 .id(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
                 .name("Skills for Life - Literacy")
-                .build());
+                .build(), DataEventType.CREATED));
 
         mockMvc.perform(post("/interventiontype")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +70,7 @@ class InterventionControllerTest {
                 .andExpect(content().json("    { \"id\": \"2e18d2f6-2a38-4cdf-a798-00b0a2e6994d\", \"name\": \"Skills for Life - Literacy\"}"));
 
         verify(interventionService, times(1))
-                .createInterventionType(CreateInterventionType.builder()
+                .createInterventionType(CreateInterventionTypeRequest.builder()
                         .name("Skills for Life - Literacy")
                         .build()
                 );
@@ -118,10 +120,10 @@ class InterventionControllerTest {
 
     @Test
     void createSubType() throws Exception {
-        when(interventionService.createInterventionSubType(any(CreateInterventionSubType.class))).thenReturn(InterventionSubType.builder()
+        when(interventionService.createInterventionSubType(any(CreateInterventionSubTypeRequest.class))).thenReturn(new DataEvent<>(InterventionSubType.builder()
                 .id(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"))
                 .name("Test subtype 1")
-                .build());
+                .build(), DataEventType.CREATED));
 
         mockMvc.perform(post("/interventiontype/2e18d2f6-2a38-4cdf-a798-00b0a2e6994d/subtype")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -130,7 +132,7 @@ class InterventionControllerTest {
                 .andExpect(content().json("    { \"id\": \"4b2f8eed-e426-4555-82b5-55ad103c235f\", \"name\": \"Test subtype 1\"}"));
 
         verify(interventionService, times(1))
-                .createInterventionSubType(CreateInterventionSubType.builder()
+                .createInterventionSubType(CreateInterventionSubTypeRequest.builder()
                         .name("Test subtype 1")
                         .interventionTypeId(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
                         .build()
@@ -139,10 +141,10 @@ class InterventionControllerTest {
 
     @Test
     void linkProviderToType() throws Exception {
-        when(interventionService.createProviderTypeLink(any(CreateProviderTypeLinkDto.class))).thenReturn(InterventionType.builder()
+        when(interventionService.createProviderTypeLink(any(CreateProviderTypeLinkRequest.class))).thenReturn(new DataEvent<>(InterventionType.builder()
                 .id(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"))
                 .name("Skills for Life - Literacy")
-                .build());
+                .build(), DataEventType.CREATED));
 
         mockMvc.perform(post("/interventiontype/4b2f8eed-e426-4555-82b5-55ad103c235f/provider")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -151,7 +153,7 @@ class InterventionControllerTest {
                 .andExpect(content().json("    { \"id\": \"4b2f8eed-e426-4555-82b5-55ad103c235f\", \"name\": \"Skills for Life - Literacy\"}"));
 
         verify(interventionService, times(1))
-                .createProviderTypeLink(CreateProviderTypeLinkDto.builder()
+                .createProviderTypeLink(CreateProviderTypeLinkRequest.builder()
                         .providerId(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
                         .interventionTypeId(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"))
                         .build()

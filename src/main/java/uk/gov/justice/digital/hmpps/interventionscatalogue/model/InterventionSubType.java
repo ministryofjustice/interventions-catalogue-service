@@ -1,31 +1,26 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.EntityListeners;
 import javax.persistence.ManyToOne;
-import java.util.UUID;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EntityListeners({AuditingEntityListener.class})
 @Audited
-public class InterventionSubType {
-    @Id
-    @GeneratedValue(generator="uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private UUID id;
+public class InterventionSubType extends BaseEntity {
     private String name;
 
     @ManyToOne

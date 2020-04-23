@@ -1,19 +1,17 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.service;
 
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubType;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionType;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProvider;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderResponse;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkDto;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProvider;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubTypeRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionTypeRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEventType;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProviderRequest;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.event.CreateInterventionDataEvent;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.model.BaseEntity;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
@@ -26,32 +24,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class InterventionService {
-
     final ProviderRepository providerRepository;
     final InterventionTypeRepository interventionTypeRepository;
     final InterventionSubTypeRepository interventionSubTypeRepository;
     final SnsService snsService;
-    final ApplicationEventPublisher applicationEventPublisher;
 
     public InterventionService(final ProviderRepository providerRepository,
                                final InterventionTypeRepository interventionTypeRepository,
                                final InterventionSubTypeRepository interventionSubTypeRepository,
-                               final SnsService snsService,
-                               ApplicationEventPublisher applicationEventPublisher) {
+                               final SnsService snsService) {
         this.providerRepository = providerRepository;
         this.interventionTypeRepository = interventionTypeRepository;
         this.interventionSubTypeRepository = interventionSubTypeRepository;
         this.snsService = snsService;
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    @TransactionalEventListener
-    public void doAfterCommit(final BaseEntity event){
-        Revision<Long, Provider> existingProvider = providerRepository.findLastChangeRevision(event.getId()).get();
-        event.setVersion(existingProvider.getRevisionNumber().get());
-        snsService.sendEvent(event);
     }
 
     public List<InterventionType> getAllInterventionTypes() {
@@ -63,37 +49,35 @@ public class InterventionService {
     }
 
     @Transactional
-    public CreateProviderResponse createProvider(final CreateProvider createProvider) {
+    @CreateInterventionDataEvent
+    public DataEvent<Provider> createProvider(final CreateProviderRequest createProviderRequest) {
         Provider createdProvider =  providerRepository.save(Provider.builder()
-                .name(createProvider.getName())
+                .name(createProviderRequest.getName())
                 .build());
 
-        applicationEventPublisher.publishEvent(createdProvider);
-
-        return new CreateProviderResponse(createdProvider);
+        return new DataEvent<>(createdProvider, DataEventType.CREATED);
     }
 
     @Transactional
-    public Provider updateProvider(final UpdateProvider updateProvider) {
+    @CreateInterventionDataEvent
+    public DataEvent<Provider> updateProvider(final UpdateProviderRequest updateProvider) {
         Optional<Revision<Long, Provider>> existingProvider = providerRepository.findLastChangeRevision(updateProvider.getId());
 
         if (existingProvider.isPresent()) {
             Provider provider = existingProvider.get().getEntity();
             provider.setName(updateProvider.getName());
 
-            Provider savedProvider = providerRepository.save(provider);
-
-            applicationEventPublisher.publishEvent(savedProvider);
-
-            return savedProvider;
+            return new DataEvent<>(provider, DataEventType.UPDATED);
         }
 
         throw new IllegalArgumentException();
     }
 
+    @Transactional
     @CreateInterventionDataEvent
-    public void deleteProvider(UUID providerId) {
+    public DataEvent<Provider> deleteProvider(UUID providerId) {
         providerRepository.deleteById(providerId);
+        return new DataEvent<>(Provider.builder().id(providerId).build(), DataEventType.DELETED);
     }
 
     public Revisions<Long, Provider> getProviderVersions(final UUID providerId) {
@@ -104,68 +88,93 @@ public class InterventionService {
         return providerRepository.findRevision(providerId, version);
     }
 
-    public Optional<Revision<Long, Provider>> getProvider(final UUID providerId) {
-        return providerRepository.findLastChangeRevision(providerId);
+    public Provider getProvider(final UUID providerId) {
+        return providerRepository.getOne(providerId);
     }
 
+    @Transactional
     @CreateInterventionDataEvent
-    public InterventionType createInterventionType(final CreateInterventionType createInterventionType) {
-        return interventionTypeRepository.save(InterventionType.builder()
-                .name(createInterventionType.getName())
-                .build());
+    public DataEvent<InterventionType> createInterventionType(final CreateInterventionTypeRequest createInterventionTypeRequest) {
+        return new DataEvent<>(interventionTypeRepository.save(InterventionType.builder()
+                .name(createInterventionTypeRequest.getName())
+                .build()), DataEventType.CREATED);
     }
 
+    @Transactional
     @CreateInterventionDataEvent
-    public InterventionSubType createInterventionSubType(final CreateInterventionSubType createInterventionSubType) {
-        InterventionType interventionType = interventionTypeRepository.getOne(createInterventionSubType.getInterventionTypeId());
+    public DataEvent<InterventionSubType> createInterventionSubType(final CreateInterventionSubTypeRequest createInterventionSubTypeRequest) {
+        InterventionType interventionType = interventionTypeRepository
+                .getOne(createInterventionSubTypeRequest.getInterventionTypeId());
+
         InterventionSubType interventionSubType = InterventionSubType.builder()
                 .interventionType(interventionType)
-                .name(createInterventionSubType.getName()).build();
+                .name(createInterventionSubTypeRequest.getName()).build();
 
-        return interventionSubTypeRepository.save(interventionSubType);
+        return new DataEvent<>(interventionSubTypeRepository.save(interventionSubType), DataEventType.CREATED);
     }
 
+    @Transactional
     @CreateInterventionDataEvent
-    public InterventionType createProviderTypeLink(final CreateProviderTypeLinkDto createProviderTypeLinkDto) {
-        Provider provider = providerRepository.findLastChangeRevision(createProviderTypeLinkDto.getProviderId()).get().getEntity();
-        InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(createProviderTypeLinkDto.getInterventionTypeId()).get().getEntity();
+    public DataEvent<InterventionType> createProviderTypeLink(final CreateProviderTypeLinkRequest createProviderTypeLinkRequest) {
+        Provider provider = providerRepository
+                .findLastChangeRevision(createProviderTypeLinkRequest.getProviderId())
+                .get()
+                .getEntity();
 
-        System.out.println("id: " + interventionType.getId());
+        InterventionType interventionType = interventionTypeRepository
+                .findLastChangeRevision(createProviderTypeLinkRequest.getInterventionTypeId())
+                .get()
+                .getEntity();
+
         interventionType.getProviders().add(provider);
 
-        return interventionTypeRepository.save(interventionType);
+        return new DataEvent<>(interventionTypeRepository.save(interventionType), DataEventType.UPDATED);
     }
 
     public InterventionType getInterventionType(final UUID interventionTypeId) {
         return interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
     }
 
-    public InterventionType deleteProviderTypeLink(final UUID interventionTypeId, final UUID providerId) {
-        InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
-        Optional<Provider> provider = interventionType.getProviders().stream().filter(p -> p.getId().equals(providerId)).findAny();
+    @Transactional
+    @CreateInterventionDataEvent
+    public DataEvent<InterventionType> deleteProviderTypeLink(final UUID interventionTypeId, final UUID providerId) {
+        InterventionType interventionType = interventionTypeRepository
+                .findLastChangeRevision(interventionTypeId)
+                .get()
+                .getEntity();
+
+        Optional<Provider> provider = interventionType
+                .getProviders()
+                .stream()
+                .filter(p -> p.getId().equals(providerId))
+                .findAny();
+
         if (provider.isPresent()) {
-            interventionType.getProviders().remove(provider);
+            interventionType.getProviders().remove(provider.get());
             interventionTypeRepository.save(interventionType);
         }
-        return interventionType;
+        return new DataEvent<>(interventionType, DataEventType.UPDATED);
     }
 
-    public InterventionType deleteInterventionSubtype(final UUID interventionTypeId, final UUID subtypeId) {
+    @Transactional
+    @CreateInterventionDataEvent
+    public DataEvent<InterventionSubType> deleteInterventionSubtype(final UUID interventionTypeId, final UUID subtypeId) {
         InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
         Optional<InterventionSubType> subtype = interventionType.getInterventionSubTypes().stream().filter(p -> p.getId().equals(subtypeId)).findAny();
         if (subtype.isPresent()) {
-            interventionType.getInterventionSubTypes().remove(subtype);
+            interventionType.getInterventionSubTypes().remove(subtype.get());
             interventionTypeRepository.save(interventionType);
+            return new DataEvent<>(subtype.get(), DataEventType.DELETED);
         }
-        return interventionType;
+        throw new IllegalArgumentException();
     }
 
-    public InterventionType deleteInterventionType(final UUID interventionTypeId) {
+    @Transactional
+    @CreateInterventionDataEvent
+    public DataEvent<InterventionType> deleteInterventionType(final UUID interventionTypeId) {
         InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
         interventionTypeRepository.delete(interventionType);
-        return null;
+        return new DataEvent<>(InterventionType.builder().id(interventionTypeId).build(), DataEventType.DELETED);
     }
-
-
 }
 

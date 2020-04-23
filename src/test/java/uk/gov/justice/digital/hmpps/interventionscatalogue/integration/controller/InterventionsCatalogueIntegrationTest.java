@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubType;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionType;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProvider;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkDto;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionSubTypeDto;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionTypeDto;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubTypeRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionTypeRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionSubTypeResponse;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProvider;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProviderRequest;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.integration.MvcIntegrationTest;
 
 import java.util.ArrayList;
@@ -36,28 +36,28 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
     private ProviderDto createProvider() throws Exception {
         MvcResult providerResult = mvc.perform(post("/provider")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateProvider.builder().name("North West Provider").build()))
+                .content(objectMapper.writeValueAsString(CreateProviderRequest.builder().name("North West Provider").build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
         return objectMapper.readValue(providerResult.getResponse().getContentAsString(), ProviderDto.class);
     }
 
-    private InterventionTypeDto createInterventionType() throws Exception {
+    private InterventionTypeResponse createInterventionType() throws Exception {
         MvcResult interventionTypeResult = mvc.perform(post("/interventiontype")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateInterventionType.builder().name("Violence Booster").build()))
+                .content(objectMapper.writeValueAsString(CreateInterventionTypeRequest.builder().name("Violence Booster").build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
-        return objectMapper.readValue(interventionTypeResult.getResponse().getContentAsString(), InterventionTypeDto.class);
+        return objectMapper.readValue(interventionTypeResult.getResponse().getContentAsString(), InterventionTypeResponse.class);
     }
 
-    private InterventionSubTypeDto createSubtype(InterventionTypeDto it) throws Exception {
+    private InterventionSubTypeResponse createSubtype(InterventionTypeResponse it) throws Exception {
         MvcResult interventionSubtypeResult = mvc.perform(post(String.format("/interventiontype/%s/subtype", it.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateInterventionSubType.builder().name("Test subtype").build()))
+                .content(objectMapper.writeValueAsString(CreateInterventionSubTypeRequest.builder().name("Test subtype").build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
-        return objectMapper.readValue(interventionSubtypeResult.getResponse().getContentAsString(), InterventionSubTypeDto.class);
+        return objectMapper.readValue(interventionSubtypeResult.getResponse().getContentAsString(), InterventionSubTypeResponse.class);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
     public void createProviderTest() throws Exception {
         MvcResult providerResult = mvc.perform(post("/provider")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateProvider.builder().name("North West Provider").build()))
+                .content(objectMapper.writeValueAsString(CreateProviderRequest.builder().name("North West Provider").build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
         ProviderDto provider = objectMapper.readValue(providerResult.getResponse().getContentAsString(), ProviderDto.class);
@@ -136,7 +136,7 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
 
         MvcResult getProviderResult = mvc.perform(put(String.format("/provider/%s", createdProvider.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(UpdateProvider.builder().name("Modified provider name").build()))
+                .content(objectMapper.writeValueAsString(UpdateProviderRequest.builder().name("Modified provider name").build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
 
@@ -148,16 +148,16 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
     public void createInterventionTypeTest() throws Exception {
         MvcResult interventionTypeResult = mvc.perform(post("/interventiontype")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateInterventionType.builder().name("Violence Booster").build()))
+                .content(objectMapper.writeValueAsString(CreateInterventionTypeRequest.builder().name("Violence Booster").build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
-        InterventionTypeDto it = objectMapper.readValue(interventionTypeResult.getResponse().getContentAsString(), InterventionTypeDto.class);
+        InterventionTypeResponse it = objectMapper.readValue(interventionTypeResult.getResponse().getContentAsString(), InterventionTypeResponse.class);
         assertThat(it.getName()).isEqualTo("Violence Booster");
     }
 
     @Test
     public void deleteInterventionTypeTest() throws Exception {
-        InterventionTypeDto it = createInterventionType();
+        InterventionTypeResponse it = createInterventionType();
         //delete type
         MvcResult deleteTypeResult = mvc.perform(delete(String.format("/interventiontype/%s", it.getId()))
                 .with(bearerToken(this.hmppsAuthToken)))
@@ -168,23 +168,23 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
 
     @Test
     public void createInterventionSubTypeTest() throws Exception {
-        InterventionTypeDto it = createInterventionType();
+        InterventionTypeResponse it = createInterventionType();
 
         MvcResult interventionSubtypeResult = mvc.perform(post(String.format("/interventiontype/%s/subtype", it.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateInterventionSubType.builder().name("Test subtype").build()))
+                .content(objectMapper.writeValueAsString(CreateInterventionSubTypeRequest.builder().name("Test subtype").build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
-        InterventionSubTypeDto ist = objectMapper.readValue(interventionSubtypeResult.getResponse().getContentAsString(), InterventionSubTypeDto.class);
+        InterventionSubTypeResponse ist = objectMapper.readValue(interventionSubtypeResult.getResponse().getContentAsString(), InterventionSubTypeResponse.class);
 
         assertThat(ist.getName()).isEqualTo("Test subtype");
     }
 
     @Test
     public void removeSubtypeFromTypeTest() throws Exception {
-        InterventionTypeDto it = createInterventionType();
+        InterventionTypeResponse it = createInterventionType();
 
-        InterventionSubTypeDto ist = createSubtype(it);
+        InterventionSubTypeResponse ist = createSubtype(it);
 
         //delete subtype from type
         MvcResult deleteSubtypeFromTypeResult = mvc.perform(delete(String.format("/interventiontype/%s/subtype/%s", it.getId(), ist.getId()))
@@ -195,41 +195,41 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
 
     @Test
     public void getInterventionTypeTest() throws Exception {
-        InterventionTypeDto it = createInterventionType();
+        InterventionTypeResponse it = createInterventionType();
 
         MvcResult getTypeResult = mvc.perform(get(String.format("/interventiontype/%s", it.getId()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
         assertThat(getTypeResult.getResponse().getStatus()).isEqualTo(200);
-        InterventionTypeDto interventionTypeDto = objectMapper.readValue(getTypeResult.getResponse().getContentAsString(), InterventionTypeDto.class);
+        InterventionTypeResponse interventionTypeResponse = objectMapper.readValue(getTypeResult.getResponse().getContentAsString(), InterventionTypeResponse.class);
     }
 
     @Test
     public void addProviderToTypeTest() throws Exception {
-        InterventionTypeDto it = createInterventionType();
+        InterventionTypeResponse it = createInterventionType();
         ProviderDto createdProvider = createProvider();
 
         // link provider to type
         MvcResult interventionProviderResult = mvc.perform(post(String.format("/interventiontype/%s/provider", it.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateProviderTypeLinkDto.builder().providerId(createdProvider.getId()).build()))
+                .content(objectMapper.writeValueAsString(CreateProviderTypeLinkRequest.builder().providerId(createdProvider.getId()).build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
-        InterventionTypeDto itd = objectMapper.readValue(interventionProviderResult.getResponse().getContentAsString(), InterventionTypeDto.class);
+        InterventionTypeResponse itd = objectMapper.readValue(interventionProviderResult.getResponse().getContentAsString(), InterventionTypeResponse.class);
     }
 
     @Test
     public void removeProviderFromTypeTest() throws Exception {
-        InterventionTypeDto it = createInterventionType();
+        InterventionTypeResponse it = createInterventionType();
         ProviderDto createdProvider = createProvider();
 
         // link provider to type
         MvcResult interventionProviderResult = mvc.perform(post(String.format("/interventiontype/%s/provider", it.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateProviderTypeLinkDto.builder().providerId(createdProvider.getId()).build()))
+                .content(objectMapper.writeValueAsString(CreateProviderTypeLinkRequest.builder().providerId(createdProvider.getId()).build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
-        InterventionTypeDto itd = objectMapper.readValue(interventionProviderResult.getResponse().getContentAsString(), InterventionTypeDto.class);
+        InterventionTypeResponse itd = objectMapper.readValue(interventionProviderResult.getResponse().getContentAsString(), InterventionTypeResponse.class);
 
         //remove provider from type
         MvcResult deleteLinkedProviderFromTypeResult = mvc.perform(delete(String.format("/interventiontype/%s/provider/%s", it.getId(), createdProvider.getId()))
