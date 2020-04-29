@@ -1,0 +1,70 @@
+{
+  "type" : "record",
+  "name" : "AvroDataEvent",
+  "namespace" : "uk.gov.justice.digital.hmpps.interventionscatalogue.avro",
+  "fields" : [ {
+    "name" : "eventType",
+    "type" : {
+      "type" : "enum",
+      "name" : "EventType",
+      "symbols" : [ "CREATED", "UPDATED", "DELETED" ]
+    }
+  }, {
+    "name" : "entity",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AvroProvider",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "string"
+      }, {
+        "name" : "createdTimestamp",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "version",
+        "type" : "int"
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
+    }, {
+      "type" : "record",
+      "name" : "AvroInterventionType",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "string"
+      }, {
+        "name" : "createdTimestamp",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "version",
+        "type" : "int"
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
+    }, {
+      "type" : "record",
+      "name" : "AvroInterventionSubType",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "string"
+      }, {
+        "name" : "createdTimestamp",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "version",
+        "type" : "int"
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
+    } ]
+  } ]
+}

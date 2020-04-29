@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.core.NotificationMessagingTemplate;
 import org.springframework.cloud.aws.messaging.core.TopicMessageChannel;
 import org.springframework.stereotype.Service;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.mappers.AutoAvroMapper;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.BaseEntity;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
+
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -19,27 +22,23 @@ public class SnsService {
     private final NotificationMessagingTemplate topicTemplate;
     private final AmazonSNSAsync amazonSns;
     private final String topicArn;
-    private final ObjectMapper objectMapper;
+    private final AvroSerializer avroSerializer;
 
     public SnsService(@Qualifier("awsSnsClient") final AmazonSNSAsync amazonSns,
                       @Value("${sns.topic.arn}") final String topicArn,
-                      final ObjectMapper objectMapper) {
+                      final AvroSerializer avroSerializer) {
 
         this.topicTemplate = new NotificationMessagingTemplate(amazonSns);
         this.topicArn = topicArn;
         this.amazonSns = amazonSns;
-        this.objectMapper = objectMapper;
+        this.avroSerializer = avroSerializer;
     }
 
-    public void sendEvent(final BaseEntity payload) {
-        try {
-            log.info("Sending message");
-            topicTemplate.convertAndSend(
-                    new TopicMessageChannel(amazonSns, topicArn),
-                    objectMapper.writeValueAsString(payload)
-            );
-        } catch (JsonProcessingException e) {
-            log.error("Failed to convert payload {} to json", payload);
-        }
+    public void sendEvent(final DataEvent<? extends BaseEntity> payload) throws IOException {
+        log.info("Sending message");
+        topicTemplate.convertAndSend(
+                new TopicMessageChannel(amazonSns, topicArn),
+                avroSerializer.serializeAvroDataEventToJSON(AutoAvroMapper.INSTANCE.map(payload))
+        );
     }
 }

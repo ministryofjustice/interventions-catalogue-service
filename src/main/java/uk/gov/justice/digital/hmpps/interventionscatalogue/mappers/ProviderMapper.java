@@ -1,10 +1,9 @@
-package uk.gov.justice.digital.hmpps.interventionscatalogue.controllers;
+package uk.gov.justice.digital.hmpps.interventionscatalogue.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.history.Revision;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionSubTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;

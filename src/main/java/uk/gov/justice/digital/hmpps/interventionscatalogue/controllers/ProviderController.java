@@ -20,6 +20,7 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ErrorDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.RevisionDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProviderRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.mappers.ProviderMapper;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.InterventionService;
 

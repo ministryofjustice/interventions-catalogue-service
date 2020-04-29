@@ -174,7 +174,8 @@ public class InterventionService {
     public DataEvent<InterventionType> deleteInterventionType(final UUID interventionTypeId) {
         InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
         interventionTypeRepository.delete(interventionType);
-        return new DataEvent<>(InterventionType.builder().id(interventionTypeId).build(), DataEventType.DELETED);
+        return new DataEvent<>(InterventionType.builder().id(interventionTypeId)
+                .createdDate(interventionType.getCreatedDate()).build(), DataEventType.DELETED);
     }
 }
 

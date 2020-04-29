@@ -14,6 +14,7 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTyp
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionSubTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.mappers.ProviderMapper;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.InterventionService;
 
 import javax.validation.Valid;

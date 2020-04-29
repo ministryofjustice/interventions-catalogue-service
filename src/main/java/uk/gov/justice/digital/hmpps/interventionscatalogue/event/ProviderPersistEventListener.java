@@ -38,7 +38,7 @@ public class ProviderPersistEventListener implements PersistEventListener {
         Object entity = event.getObject();
 
         if (entity instanceof Provider) {
-            snsService.sendEvent((Provider) entity);
+//            snsService.sendEvent((Provider) entity);
         }
     }
 

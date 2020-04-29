@@ -14,6 +14,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.ManyToOne;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
