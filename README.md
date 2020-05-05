@@ -2,7 +2,12 @@
 
 [![CircleCI](https://circleci.com/gh/ministryofjustice/interventions-catalogue-service/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/interventions-catalogue-service)
 [![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/interventions-catalogue-service/badge.svg)](https://snyk.io/test/github/ministryofjustice/interventions-catalogue-service)
- 
+
+This is a Spring Boot application that provides tha basis for the Interventions Catalogue.
+
+Interventions are persisted in a PostgreSQL database, and the application is secured using DPS auth and OAuth Connect.
+
+
 ### Building
 
 ```bash
@@ -22,7 +27,7 @@ rather than calling the `/health` endpoint.
 - `/health`: provides information about the application health and its dependencies. 
 - `/info`: provides information about the version of deployed application.
 
-#### Localstack
+#### Local stack
 
 Create topic
 

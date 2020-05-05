@@ -28,6 +28,8 @@ class AutoAvroMapperTest {
         DataEvent<Provider> input = new DataEvent<>(Provider.builder()
                 .id(UUID.randomUUID())
                 .name("Test Provider")
+                .deliusCode("TEST1")
+                .active(true)
                 .version(86L)
                 .createdDate(LocalDateTime.now()).build(), DataEventType.CREATED);
         AvroDataEvent output = AutoAvroMapper.INSTANCE.map(input);
@@ -40,6 +42,8 @@ class AutoAvroMapperTest {
         DataEvent<InterventionType> input = new DataEvent<>(InterventionType.builder()
                 .id(UUID.randomUUID())
                 .name("Test Intervention Type")
+                .deliusCode("TEST1")
+                .active(true)
                 .version(86L)
                 .createdDate(LocalDateTime.now()).build(), DataEventType.CREATED);
         AvroDataEvent output = AutoAvroMapper.INSTANCE.map(input);
@@ -51,8 +55,11 @@ class AutoAvroMapperTest {
         DataEvent<InterventionSubType> input = new DataEvent<>(InterventionSubType.builder()
                 .id(UUID.randomUUID())
                 .name("Test Intervention Type")
+                .deliusCode("TEST1")
+                .active(true)
                 .version(86L)
-                .createdDate(LocalDateTime.now()).build(), DataEventType.CREATED);
+                .createdDate(LocalDateTime.now())
+                .interventionType(InterventionType.builder().id(UUID.randomUUID()).build()).build(), DataEventType.CREATED);
         AvroDataEvent output = AutoAvroMapper.INSTANCE.map(input);
         assertThat(output.getEventType()).isEqualTo(EventType.CREATED);
     }

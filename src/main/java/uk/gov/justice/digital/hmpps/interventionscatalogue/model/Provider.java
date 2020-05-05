@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -25,6 +24,10 @@ import java.util.Set;
 @Audited
 public class Provider extends BaseEntity {
     protected String name;
+
+    protected String deliusCode;
+
+    protected Boolean active;
 
     @Singular
     @ManyToMany(mappedBy = "providers")

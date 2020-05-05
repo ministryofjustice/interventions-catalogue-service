@@ -61,17 +61,21 @@ class InterventionControllerTest {
         when(interventionService.createInterventionType(any(CreateInterventionTypeRequest.class))).thenReturn(new DataEvent<>(InterventionType.builder()
                 .id(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
                 .name("Skills for Life - Literacy")
+                .deliusCode("SFL")
+                .active(true)
                 .build(), DataEventType.CREATED));
 
         mockMvc.perform(post("/interventiontype")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Skills for Life - Literacy\"}")
+                .content("{\"name\": \"Skills for Life - Literacy\", \"deliusCode\":\"SFL\", \"active\":true }")
                 .with(jwt()))
-                .andExpect(content().json("    { \"id\": \"2e18d2f6-2a38-4cdf-a798-00b0a2e6994d\", \"name\": \"Skills for Life - Literacy\"}"));
+                .andExpect(content().json("    { \"id\": \"2e18d2f6-2a38-4cdf-a798-00b0a2e6994d\", \"name\": \"Skills for Life - Literacy\", \"deliusCode\":\"SFL\", \"active\":true }"));
 
         verify(interventionService, times(1))
                 .createInterventionType(CreateInterventionTypeRequest.builder()
                         .name("Skills for Life - Literacy")
+                        .deliusCode("SFL")
+                        .active(true)
                         .build()
                 );
     }
@@ -123,18 +127,22 @@ class InterventionControllerTest {
         when(interventionService.createInterventionSubType(any(CreateInterventionSubTypeRequest.class))).thenReturn(new DataEvent<>(InterventionSubType.builder()
                 .id(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"))
                 .name("Test subtype 1")
+                .deliusCode("TEST1")
+                .active(true)
                 .build(), DataEventType.CREATED));
 
         mockMvc.perform(post("/interventiontype/2e18d2f6-2a38-4cdf-a798-00b0a2e6994d/subtype")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Test subtype 1\"}")
+                .content("{\"name\": \"Test subtype 1\", \"deliusCode\": \"TEST1\", \"active\":true }")
                 .with(jwt()))
-                .andExpect(content().json("    { \"id\": \"4b2f8eed-e426-4555-82b5-55ad103c235f\", \"name\": \"Test subtype 1\"}"));
+                .andExpect(content().json("    { \"id\": \"4b2f8eed-e426-4555-82b5-55ad103c235f\", \"name\": \"Test subtype 1\", \"deliusCode\": \"TEST1\", \"active\":true }"));
 
         verify(interventionService, times(1))
                 .createInterventionSubType(CreateInterventionSubTypeRequest.builder()
                         .name("Test subtype 1")
                         .interventionTypeId(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
+                        .deliusCode("TEST1")
+                        .active(true)
                         .build()
                 );
     }

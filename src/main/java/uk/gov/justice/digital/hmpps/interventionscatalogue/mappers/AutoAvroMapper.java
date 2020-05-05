@@ -15,6 +15,7 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSub
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
 
+import javax.persistence.MapsId;
 import java.time.LocalDateTime;
 
 @Mapper
@@ -52,9 +53,12 @@ public abstract class AutoAvroMapper {
     abstract AvroInterventionType mapInterventionType(InterventionType interventionType);
 
     @Mapping(source = "createdDate", target = "createdTimestamp" )
+    @Mapping(source = "interventionType.id", target = "deliusParentNsiCode")
     abstract AvroInterventionSubType mapInterventionSubType(InterventionSubType interventionSubType);
 
-    abstract String map(java.util.UUID value);
+    String map(java.util.UUID value) {
+        return value.toString();
+    };
 
     Long map(LocalDateTime dateTime) {
         if (dateTime == null) {

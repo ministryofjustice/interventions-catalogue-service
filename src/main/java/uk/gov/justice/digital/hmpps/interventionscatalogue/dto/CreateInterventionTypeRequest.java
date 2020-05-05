@@ -13,4 +13,10 @@ import lombok.NonNull;
 public class CreateInterventionTypeRequest {
     @NonNull
     private String name;
+
+    @NonNull
+    private String deliusCode;
+
+    @NonNull
+    private Boolean active;
 }

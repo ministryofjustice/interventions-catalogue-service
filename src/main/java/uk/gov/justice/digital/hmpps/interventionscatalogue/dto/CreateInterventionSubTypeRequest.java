@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.With;
 
 import java.util.UUID;
@@ -15,5 +16,13 @@ import java.util.UUID;
 @With
 public class CreateInterventionSubTypeRequest {
     private UUID interventionTypeId;
+
+    @NonNull
     private String name;
+
+    @NonNull
+    private String deliusCode;
+
+    @NonNull
+    private Boolean active;
 }

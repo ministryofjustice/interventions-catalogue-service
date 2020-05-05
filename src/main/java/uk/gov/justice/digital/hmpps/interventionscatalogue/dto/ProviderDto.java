@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,5 +19,7 @@ public class ProviderDto {
     private UUID id;
     private Long version;
     private String name;
+    private String deliusCode;
+    private Boolean active;
     private LocalDateTime createdDate;
 }

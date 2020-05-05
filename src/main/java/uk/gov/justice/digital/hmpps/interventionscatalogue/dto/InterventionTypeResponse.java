@@ -17,5 +17,7 @@ import java.util.UUID;
 public class InterventionTypeResponse {
     private UUID id;
     private String name;
+    private String deliusCode;
+    private Boolean active;
     private List<InterventionSubTypeResponse> interventionSubTypes;
 }

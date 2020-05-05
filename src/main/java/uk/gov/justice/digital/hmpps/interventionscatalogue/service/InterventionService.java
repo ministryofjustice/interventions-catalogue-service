@@ -53,6 +53,8 @@ public class InterventionService {
     public DataEvent<Provider> createProvider(final CreateProviderRequest createProviderRequest) {
         Provider createdProvider =  providerRepository.save(Provider.builder()
                 .name(createProviderRequest.getName())
+                .deliusCode(createProviderRequest.getDeliusCode())
+                .active(createProviderRequest.getActive())
                 .build());
 
         return new DataEvent<>(createdProvider, DataEventType.CREATED);
@@ -66,6 +68,8 @@ public class InterventionService {
         if (existingProvider.isPresent()) {
             Provider provider = existingProvider.get().getEntity();
             provider.setName(updateProvider.getName());
+            provider.setDeliusCode(updateProvider.getDeliusCode());
+            provider.setActive(updateProvider.getActive());
 
             return new DataEvent<>(provider, DataEventType.UPDATED);
         }
@@ -97,6 +101,8 @@ public class InterventionService {
     public DataEvent<InterventionType> createInterventionType(final CreateInterventionTypeRequest createInterventionTypeRequest) {
         return new DataEvent<>(interventionTypeRepository.save(InterventionType.builder()
                 .name(createInterventionTypeRequest.getName())
+                .deliusCode(createInterventionTypeRequest.getDeliusCode())
+                .active(createInterventionTypeRequest.getActive())
                 .build()), DataEventType.CREATED);
     }
 
@@ -108,7 +114,10 @@ public class InterventionService {
 
         InterventionSubType interventionSubType = InterventionSubType.builder()
                 .interventionType(interventionType)
-                .name(createInterventionSubTypeRequest.getName()).build();
+                .name(createInterventionSubTypeRequest.getName())
+                .deliusCode(createInterventionSubTypeRequest.getDeliusCode())
+                .active(createInterventionSubTypeRequest.getActive())
+                .build();
 
         return new DataEvent<>(interventionSubTypeRepository.save(interventionSubType), DataEventType.CREATED);
     }
@@ -160,7 +169,9 @@ public class InterventionService {
     @CreateInterventionDataEvent
     public DataEvent<InterventionSubType> deleteInterventionSubtype(final UUID interventionTypeId, final UUID subtypeId) {
         InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
-        Optional<InterventionSubType> subtype = interventionType.getInterventionSubTypes().stream().filter(p -> p.getId().equals(subtypeId)).findAny();
+        Optional<InterventionSubType> subtype = interventionType.getInterventionSubTypes()
+                .stream()
+                .filter(p -> p.getId().equals(subtypeId)).findAny();
         if (subtype.isPresent()) {
             interventionType.getInterventionSubTypes().remove(subtype.get());
             interventionTypeRepository.save(interventionType);

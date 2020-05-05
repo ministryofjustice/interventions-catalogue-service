@@ -36,7 +36,11 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
     private ProviderDto createProvider() throws Exception {
         MvcResult providerResult = mvc.perform(post("/provider")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateProviderRequest.builder().name("North West Provider").build()))
+                .content(objectMapper.writeValueAsString(CreateProviderRequest.builder()
+                        .name("North West Provider")
+                        .deliusCode("NWCRC")
+                        .active(true)
+                        .build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
         return objectMapper.readValue(providerResult.getResponse().getContentAsString(), ProviderDto.class);
@@ -45,7 +49,11 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
     private InterventionTypeResponse createInterventionType() throws Exception {
         MvcResult interventionTypeResult = mvc.perform(post("/interventiontype")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateInterventionTypeRequest.builder().name("Violence Booster").build()))
+                .content(objectMapper.writeValueAsString(CreateInterventionTypeRequest.builder()
+                        .name("Violence Booster")
+                        .deliusCode("VBOOST")
+                        .active(true)
+                        .build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
         return objectMapper.readValue(interventionTypeResult.getResponse().getContentAsString(), InterventionTypeResponse.class);
@@ -54,7 +62,11 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
     private InterventionSubTypeResponse createSubtype(InterventionTypeResponse it) throws Exception {
         MvcResult interventionSubtypeResult = mvc.perform(post(String.format("/interventiontype/%s/subtype", it.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateInterventionSubTypeRequest.builder().name("Test subtype").build()))
+                .content(objectMapper.writeValueAsString(CreateInterventionSubTypeRequest.builder()
+                        .name("Test subtype")
+                        .deliusCode("TEST")
+                        .active(true)
+                        .build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
         return objectMapper.readValue(interventionSubtypeResult.getResponse().getContentAsString(), InterventionSubTypeResponse.class);
@@ -81,7 +93,11 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
     public void createProviderTest() throws Exception {
         MvcResult providerResult = mvc.perform(post("/provider")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateProviderRequest.builder().name("North West Provider").build()))
+                .content(objectMapper.writeValueAsString(CreateProviderRequest.builder()
+                        .name("North West Provider")
+                        .deliusCode("NWCRC")
+                        .active(true)
+                        .build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
         ProviderDto provider = objectMapper.readValue(providerResult.getResponse().getContentAsString(), ProviderDto.class);
@@ -136,7 +152,11 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
 
         MvcResult getProviderResult = mvc.perform(put(String.format("/provider/%s", createdProvider.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(UpdateProviderRequest.builder().name("Modified provider name").build()))
+                .content(objectMapper.writeValueAsString(UpdateProviderRequest.builder()
+                        .name("Modified provider name")
+                        .active(true)
+                        .deliusCode("NWCRC")
+                        .build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
 
@@ -148,7 +168,11 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
     public void createInterventionTypeTest() throws Exception {
         MvcResult interventionTypeResult = mvc.perform(post("/interventiontype")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateInterventionTypeRequest.builder().name("Violence Booster").build()))
+                .content(objectMapper.writeValueAsString(CreateInterventionTypeRequest.builder()
+                        .name("Violence Booster")
+                        .deliusCode("VBOOST")
+                        .active(true)
+                        .build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
         InterventionTypeResponse it = objectMapper.readValue(interventionTypeResult.getResponse().getContentAsString(), InterventionTypeResponse.class);
@@ -172,7 +196,11 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
 
         MvcResult interventionSubtypeResult = mvc.perform(post(String.format("/interventiontype/%s/subtype", it.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(CreateInterventionSubTypeRequest.builder().name("Test subtype").build()))
+                .content(objectMapper.writeValueAsString(CreateInterventionSubTypeRequest.builder()
+                        .name("Test subtype")
+                        .deliusCode("TEST")
+                        .active(true)
+                        .build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
         InterventionSubTypeResponse ist = objectMapper.readValue(interventionSubtypeResult.getResponse().getContentAsString(), InterventionSubTypeResponse.class);

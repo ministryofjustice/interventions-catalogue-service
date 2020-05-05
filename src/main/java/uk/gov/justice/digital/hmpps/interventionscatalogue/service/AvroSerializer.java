@@ -16,23 +16,14 @@ import java.io.IOException;
 @Slf4j
 @Service
 public class AvroSerializer {
-    public String serializeAvroDataEventToJSON(
-            AvroDataEvent request) throws IOException {
+    public String serializeAvroDataEventToJSON(final AvroDataEvent request) throws IOException {
 
         DatumWriter<AvroDataEvent> writer = new SpecificDatumWriter<>(AvroDataEvent.class);
-
-        String data = new String();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-        Encoder jsonEncoder = null;
-//        try {
-            jsonEncoder = EncoderFactory.get().jsonEncoder(AvroDataEvent.getClassSchema(), stream);
-            writer.write(request, jsonEncoder);
-            jsonEncoder.flush();
-            data = stream.toString();
-//        } catch (IOException e) {
-//            log.error("Serialization error:" + e.getMessage());
-//        }
-        return data;
+        Encoder jsonEncoder = EncoderFactory.get().jsonEncoder(AvroDataEvent.getClassSchema(), stream);
+        writer.write(request, jsonEncoder);
+        jsonEncoder.flush();
+        return stream.toString();
     }
 }

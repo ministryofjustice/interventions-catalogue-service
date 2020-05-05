@@ -29,6 +29,10 @@ import java.util.Set;
 public class InterventionType extends BaseEntity {
     private String name;
 
+    private String deliusCode;
+
+    private Boolean active;
+
     @Singular
     @ManyToMany
     @JoinTable(name = "provider_intervention_type", joinColumns = @JoinColumn(name="intervention_type_id"), inverseJoinColumns = @JoinColumn(name="provider_id"))

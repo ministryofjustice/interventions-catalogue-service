@@ -55,17 +55,21 @@ class ProviderControllerTest {
         when(interventionService.createProvider(any(CreateProviderRequest.class))).thenReturn(new DataEvent<Provider>(Provider.builder()
                 .id(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
                 .name("North West CRC")
+                .deliusCode("NWCRC")
+                .active(true)
                 .build(), DataEventType.CREATED));
 
         mockMvc.perform(post("/provider")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"North West CRC\"}")
+                .content("{\"name\": \"North West CRC\", \"deliusCode\":\"NWCRC\", \"active\":true}")
                 .with(jwt()))
-                .andExpect(content().json("    { \"id\": \"2e18d2f6-2a38-4cdf-a798-00b0a2e6994d\", \"name\": \"North West CRC\"}"));
+                .andExpect(content().json("    { \"id\": \"2e18d2f6-2a38-4cdf-a798-00b0a2e6994d\", \"name\": \"North West CRC\", \"deliusCode\":\"NWCRC\", \"active\":true}"));
 
         verify(interventionService, times(1))
                 .createProvider(CreateProviderRequest.builder()
                         .name("North West CRC")
+                        .deliusCode("NWCRC")
+                        .active(true)
                         .build()
                 );
     }

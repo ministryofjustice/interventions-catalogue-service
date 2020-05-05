@@ -60,7 +60,9 @@ class InterventionController {
     InterventionSubTypeResponse createSubType(@PathVariable("interventionTypeId") UUID interventionTypeId,
                                               @RequestBody @Valid CreateInterventionSubTypeRequest createInterventionSubTypeRequest) {
 
-        return ProviderMapper.INSTANCE.map(interventionService.createInterventionSubType(createInterventionSubTypeRequest.withInterventionTypeId(interventionTypeId)).getEntity());
+        return ProviderMapper.INSTANCE.map(interventionService.createInterventionSubType(createInterventionSubTypeRequest
+                .withInterventionTypeId(interventionTypeId))
+                .getEntity());
     }
 
     @DeleteMapping(path="{interventionTypeId}/subtype/{subtypeId}")
@@ -80,7 +82,9 @@ class InterventionController {
     InterventionTypeResponse linkProviderToType(@PathVariable("interventionTypeId") UUID interventionTypeId,
                                                 @RequestBody @Valid CreateProviderTypeLinkRequest createProviderTypeLinkRequest) {
 
-        return ProviderMapper.INSTANCE.map(interventionService.createProviderTypeLink(createProviderTypeLinkRequest.withInterventionTypeId(interventionTypeId)).getEntity());
+        return ProviderMapper.INSTANCE.map(interventionService.createProviderTypeLink(createProviderTypeLinkRequest
+                .withInterventionTypeId(interventionTypeId))
+                .getEntity());
     }
 
     @DeleteMapping(path="{interventionTypeId}/provider/{providerId}")

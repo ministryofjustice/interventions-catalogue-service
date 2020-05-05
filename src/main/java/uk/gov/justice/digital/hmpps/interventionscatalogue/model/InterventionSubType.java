@@ -24,6 +24,10 @@ import javax.persistence.ManyToOne;
 public class InterventionSubType extends BaseEntity {
     private String name;
 
+    private String deliusCode;
+
+    private Boolean active;
+
     @ManyToOne
     @EqualsAndHashCode.Exclude()
     @ToString.Exclude

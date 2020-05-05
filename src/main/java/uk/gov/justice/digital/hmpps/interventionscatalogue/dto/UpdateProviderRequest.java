@@ -14,4 +14,6 @@ import java.util.UUID;
 public class UpdateProviderRequest {
     private UUID id;
     private String name;
+    private String deliusCode;
+    private Boolean active;
 }
