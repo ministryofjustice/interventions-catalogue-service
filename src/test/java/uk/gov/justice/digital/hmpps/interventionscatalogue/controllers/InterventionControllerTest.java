@@ -14,9 +14,12 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventio
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkRequest;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEventType;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderTypeLinkResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.model.ProviderInterventionType;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.model.ProviderInterventionTypeId;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.InterventionService;
 
 import java.util.List;
@@ -107,14 +110,14 @@ class InterventionControllerTest {
                 .thenReturn(InterventionType.builder()
                         .id(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
                         .name("Skills for Life - Literacy")
-                        .providers(Set.of(Provider.builder()
+                        .providerInterventionTypes(Set.of(ProviderInterventionType.builder().provider(Provider.builder()
                                         .name("Provider 1")
                                         .id(UUID.fromString("1a72fd6c-a845-46f9-b6d1-b07596a33019"))
-                                        .build(),
-                                Provider.builder()
+                                        .build()).build(),
+                                ProviderInterventionType.builder().provider(Provider.builder()
                                         .name("Provider 2")
                                         .id(UUID.fromString("3cfd2a07-8c01-4645-81ac-c107348179a8"))
-                                        .build()))
+                                        .build()).build()))
                         .build());
 
         mockMvc.perform(get("/interventiontype/2e18d2f6-2a38-4cdf-a798-00b0a2e6994d/provider").with(jwt()))
@@ -149,16 +152,24 @@ class InterventionControllerTest {
 
     @Test
     void linkProviderToType() throws Exception {
-        when(interventionService.createProviderTypeLink(any(CreateProviderTypeLinkRequest.class))).thenReturn(new DataEvent<>(InterventionType.builder()
-                .id(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"))
-                .name("Skills for Life - Literacy")
+        when(interventionService.createProviderTypeLink(any(CreateProviderTypeLinkRequest.class))).thenReturn(new DataEvent<>(ProviderInterventionType.builder()
+                .provider(Provider.builder().id(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d")).deliusCode("P1").build())
+                .interventionType(InterventionType.builder().id(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f")).deliusCode("IT1").build())
+                .id(
+                        new ProviderInterventionTypeId(
+                                UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"),
+                                UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"))
+                )
                 .build(), DataEventType.CREATED));
 
         mockMvc.perform(post("/interventiontype/4b2f8eed-e426-4555-82b5-55ad103c235f/provider")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"providerId\": \"2e18d2f6-2a38-4cdf-a798-00b0a2e6994d\"}")
                 .with(jwt()))
-                .andExpect(content().json("    { \"id\": \"4b2f8eed-e426-4555-82b5-55ad103c235f\", \"name\": \"Skills for Life - Literacy\"}"));
+                .andExpect(content().json("{ \"interventionTypeId\": \"4b2f8eed-e426-4555-82b5-55ad103c235f\", " +
+                                          "\"providerId\": \"2e18d2f6-2a38-4cdf-a798-00b0a2e6994d\", " +
+                                          "\"deliusProviderCode\": \"P1\", " +
+                                          "\"deliusInterventionCode\": \"IT1\"}"));
 
         verify(interventionService, times(1))
                 .createProviderTypeLink(CreateProviderTypeLinkRequest.builder()

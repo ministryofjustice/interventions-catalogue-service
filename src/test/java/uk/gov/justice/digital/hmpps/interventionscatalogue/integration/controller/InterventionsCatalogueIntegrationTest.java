@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTyp
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionSubTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderTypeLinkResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProviderRequest;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.integration.MvcIntegrationTest;
 
@@ -243,7 +244,7 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
                 .content(objectMapper.writeValueAsString(CreateProviderTypeLinkRequest.builder().providerId(createdProvider.getId()).build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
-        InterventionTypeResponse itd = objectMapper.readValue(interventionProviderResult.getResponse().getContentAsString(), InterventionTypeResponse.class);
+        ProviderTypeLinkResponse itd = objectMapper.readValue(interventionProviderResult.getResponse().getContentAsString(), ProviderTypeLinkResponse.class);
     }
 
     @Test
@@ -257,7 +258,7 @@ public class InterventionsCatalogueIntegrationTest extends MvcIntegrationTest {
                 .content(objectMapper.writeValueAsString(CreateProviderTypeLinkRequest.builder().providerId(createdProvider.getId()).build()))
                 .with(bearerToken(this.hmppsAuthToken)))
                 .andExpect(status().isOk()).andReturn();
-        InterventionTypeResponse itd = objectMapper.readValue(interventionProviderResult.getResponse().getContentAsString(), InterventionTypeResponse.class);
+        ProviderTypeLinkResponse itd = objectMapper.readValue(interventionProviderResult.getResponse().getContentAsString(), ProviderTypeLinkResponse.class);
 
         //remove provider from type
         MvcResult deleteLinkedProviderFromTypeResult = mvc.perform(delete(String.format("/interventiontype/%s/provider/%s", it.getId(), createdProvider.getId()))

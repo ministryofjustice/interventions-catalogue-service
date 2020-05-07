@@ -43,6 +43,18 @@ public class GenerateAvroSchema {
                 .optionalString("name")
                 .endRecord();
 
+
+        Schema providerInterventionLink = SchemaBuilder.record("AvroProviderInterventionLink")
+                .namespace("uk.gov.justice.digital.hmpps.interventionscatalogue.avro")
+                .fields()
+                .requiredString("providerId")
+                .requiredString("interventionTypeId")
+                .requiredString("deliusInterventionCode")
+                .requiredString("deliusProviderCode")
+                .optionalLong("createdTimestamp")
+                .requiredInt("version")
+                .endRecord();
+
         Schema clientIdentifier = SchemaBuilder.record("AvroDataEvent")
                 .namespace("uk.gov.justice.digital.hmpps.interventionscatalogue.avro")
                 .fields()
@@ -55,8 +67,11 @@ public class GenerateAvroSchema {
                 .nullType().and()
                 .type(provider).and()
                 .type(interventionType).and()
-                .type(interventionSubType).endUnion().noDefault()
+                .type(interventionSubType).and()
+                .type(providerInterventionLink)
+                .endUnion().noDefault()
                 .endRecord();
+
         System.out.println(clientIdentifier.toString(true));
     }
 }

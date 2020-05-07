@@ -7,17 +7,19 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CreateProviderRequest {
-    @NonNull
+    @NotNull
     private String name;
 
-    @NonNull
+    @NotNull
     private String deliusCode;
 
-    @NonNull
+    @NotNull
     private Boolean active;
 }

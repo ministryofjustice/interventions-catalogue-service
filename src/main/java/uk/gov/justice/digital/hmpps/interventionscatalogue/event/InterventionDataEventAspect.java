@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.interventionscatalogue.event;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -14,42 +15,53 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionTyp
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.repository.InterventionSubTypeRepository;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.repository.InterventionTypeRepository;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.repository.ProviderInterventionTypeRepository;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.repository.ProviderRepository;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.SnsService;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
 @Aspect
 @Component
+@AllArgsConstructor
 public class InterventionDataEventAspect implements Ordered {
 
     private SnsService snsService;
+    private ProviderRepository providerRepository;
+    private InterventionTypeRepository interventionTypeRepository;
+    private InterventionSubTypeRepository interventionSubTypeRepository;
+    private  ProviderInterventionTypeRepository providerInterventionTypeRepository;
 
-    private Map<Class<? extends BaseEntity>, RevisionRepository<? extends BaseEntity, UUID, Long>> repositoryMap;
-
-    public InterventionDataEventAspect(SnsService snsService, ProviderRepository providerRepository, InterventionTypeRepository interventionTypeRepository, InterventionSubTypeRepository interventionSubTypeRepository) {
-        this.snsService = snsService;
-
-        repositoryMap = new HashMap<>();
-        repositoryMap.put(Provider.class, providerRepository);
-        repositoryMap.put(InterventionType.class, interventionTypeRepository);
-        repositoryMap.put(InterventionSubType.class, interventionSubTypeRepository);
+    public RevisionRepository<? extends BaseEntity, UUID, Long> getRepositoryForEntity(Object entity) {
+        if(entity instanceof Provider) {
+            return providerRepository;
+        } else if (entity instanceof  InterventionType) {
+            return interventionTypeRepository;
+        } else if (entity instanceof InterventionSubType) {
+            return interventionSubTypeRepository;
+        }
+//        else if (entity instanceof ProviderInterventionType) {
+//            return providerInterventionTypeRepository;
+//        }
+//        throw new RuntimeException("Unknown entity type");
+        return null;
     }
 
     @AfterReturning(pointcut = "@annotation(CreateInterventionDataEvent)", returning = "returnedObject")
     public Object createInterventionDataEvent(JoinPoint joinPoint, Object returnedObject) throws Throwable {
         if (returnedObject instanceof DataEvent) {
-            DataEvent<BaseEntity> dataEvent  = (DataEvent<BaseEntity>) returnedObject;
+            DataEvent dataEvent  = (DataEvent) returnedObject;
 
-            RevisionRepository<? extends BaseEntity, UUID, Long> repository = repositoryMap.get(dataEvent.getEntity().getClass());
+            var repository = getRepositoryForEntity(((DataEvent) returnedObject).getEntity());
 
-            var revisions = repository.findRevisions(dataEvent.getEntity().getId());
-            Long revisionNumber = revisions.getLatestRevision().getRevisionNumber().get();
+            if (repository != null) {
+                var revisions = repository.findRevisions((UUID)dataEvent.getEntity().getId());
 
-            dataEvent.getEntity().setVersion(revisionNumber);
+                Long revisionNumber = revisions.getLatestRevision().getRevisionNumber().get();
+
+                dataEvent.getEntity().setVersion(revisionNumber);
+            }
 
             log.info("createInterventionDataEvent");
             snsService.sendEvent(dataEvent);

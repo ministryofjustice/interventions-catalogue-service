@@ -14,6 +14,7 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTyp
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionSubTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderTypeLinkResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.mappers.ProviderMapper;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.InterventionService;
 
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "interventiontype", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,12 +76,16 @@ class InterventionController {
 
     @GetMapping(path="{interventionTypeId}/provider")
     Set<ProviderDto> getInterventionProviders(@PathVariable("interventionTypeId") UUID interventionTypeId) {
-        return ProviderMapper.INSTANCE.map(interventionService.getInterventionType(interventionTypeId)
-                .getProviders());
+        var providers = interventionService.getInterventionType(interventionTypeId)
+                .getProviderInterventionTypes()
+                .stream()
+                .map(pit -> pit.getProvider())
+                .collect(Collectors.toList());
+        return ProviderMapper.INSTANCE.map(providers);
     }
 
     @PostMapping(path="{interventionTypeId}/provider")
-    InterventionTypeResponse linkProviderToType(@PathVariable("interventionTypeId") UUID interventionTypeId,
+    ProviderTypeLinkResponse linkProviderToType(@PathVariable("interventionTypeId") UUID interventionTypeId,
                                                 @RequestBody @Valid CreateProviderTypeLinkRequest createProviderTypeLinkRequest) {
 
         return ProviderMapper.INSTANCE.map(interventionService.createProviderTypeLink(createProviderTypeLinkRequest
@@ -88,7 +94,7 @@ class InterventionController {
     }
 
     @DeleteMapping(path="{interventionTypeId}/provider/{providerId}")
-    InterventionTypeResponse deleteProviderFromType(@PathVariable("interventionTypeId") UUID interventionTypeId,
+    ProviderTypeLinkResponse deleteProviderFromType(@PathVariable("interventionTypeId") UUID interventionTypeId,
                                                     @PathVariable("providerId") UUID providerId) {
 
         return ProviderMapper.INSTANCE.map(interventionService.deleteProviderTypeLink(interventionTypeId, providerId).getEntity());

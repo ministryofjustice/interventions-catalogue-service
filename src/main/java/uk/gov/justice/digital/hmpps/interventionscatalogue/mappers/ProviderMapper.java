@@ -7,10 +7,12 @@ import org.springframework.data.history.Revision;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionSubTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderTypeLinkResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.RevisionDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.model.ProviderInterventionType;
 
 import java.util.List;
 import java.util.Set;
@@ -38,4 +40,10 @@ public interface ProviderMapper {
     List<InterventionSubTypeResponse> map(Set<InterventionSubType> interventionSubTypes);
 
     InterventionSubTypeResponse map(InterventionSubType interventionSubType);
+
+    @Mapping(source = "provider.id", target = "providerId")
+    @Mapping(source = "interventionType.id", target = "interventionTypeId")
+    @Mapping(source = "interventionType.deliusCode", target = "deliusInterventionCode")
+    @Mapping(source = "provider.deliusCode", target = "deliusProviderCode")
+    ProviderTypeLinkResponse map(ProviderInterventionType providerInterventionType);
 }

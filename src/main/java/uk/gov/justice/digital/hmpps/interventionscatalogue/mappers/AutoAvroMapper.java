@@ -3,19 +3,18 @@ package uk.gov.justice.digital.hmpps.interventionscatalogue.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.factory.Mappers;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.avro.AvroDataEvent;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.avro.AvroInterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.avro.AvroInterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.avro.AvroProvider;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.avro.AvroProviderInterventionLink;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderTypeLinkResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
-import uk.gov.justice.digital.hmpps.interventionscatalogue.model.BaseEntity;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
 
-import javax.persistence.MapsId;
 import java.time.LocalDateTime;
 
 @Mapper
@@ -23,7 +22,8 @@ public abstract class AutoAvroMapper {
     public static AutoAvroMapper INSTANCE = Mappers.getMapper(AutoAvroMapper.class);
 
     @Mapping(source = "entity", target = "entity", qualifiedByName = "baseEntityTransformation")
-    public abstract AvroDataEvent map(DataEvent<? extends BaseEntity> entity);
+    @Mapping(source = "event", target = "eventType")
+    public abstract AvroDataEvent map(DataEvent<?> entity);
 
     /**
      * MapStruct is an Annotation Processor that generates code during compilation.
@@ -35,13 +35,15 @@ public abstract class AutoAvroMapper {
      * @return
      */
     @Named("baseEntityTransformation")
-    Object mapBaseEntity(BaseEntity entity) {
+    Object mapBaseEntity(Object entity) {
         if (entity instanceof Provider) {
             return mapProvider((Provider) entity);
         } else if (entity instanceof InterventionType) {
             return mapInterventionType((InterventionType) entity);
         } else if (entity instanceof InterventionSubType) {
             return mapInterventionSubType((InterventionSubType) entity);
+        } else if (entity instanceof ProviderTypeLinkResponse) {
+            return mapProviderTypeLink((ProviderTypeLinkResponse) entity);
         }
         return null;
     }
@@ -55,6 +57,8 @@ public abstract class AutoAvroMapper {
     @Mapping(source = "createdDate", target = "createdTimestamp" )
     @Mapping(source = "interventionType.id", target = "deliusParentNsiCode")
     abstract AvroInterventionSubType mapInterventionSubType(InterventionSubType interventionSubType);
+
+    abstract AvroProviderInterventionLink mapProviderTypeLink(ProviderTypeLinkResponse providerTypeLinkResponse);
 
     String map(java.util.UUID value) {
         return value.toString();

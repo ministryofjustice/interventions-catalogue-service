@@ -93,6 +93,29 @@
         "type" : [ "null", "string" ],
         "default" : null
       } ]
+    }, {
+      "type" : "record",
+      "name" : "AvroProviderInterventionLink",
+      "fields" : [ {
+        "name" : "providerId",
+        "type" : "string"
+      }, {
+        "name" : "interventionTypeId",
+        "type" : "string"
+      }, {
+        "name" : "deliusInterventionCode",
+        "type" : "string"
+      }, {
+        "name" : "deliusProviderCode",
+        "type" : "string"
+      }, {
+        "name" : "createdTimestamp",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "version",
+        "type" : "int"
+      } ]
     } ]
   } ]
 }

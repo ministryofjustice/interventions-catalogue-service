@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.mappers.AutoAvroMapper;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.BaseEntity;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.model.DataEntity;
 
 import java.io.IOException;
 
@@ -34,7 +35,7 @@ public class SnsService {
         this.avroSerializer = avroSerializer;
     }
 
-    public void sendEvent(final DataEvent<? extends BaseEntity> payload) throws IOException {
+    public void sendEvent(final DataEvent<? extends DataEntity> payload) throws IOException {
         log.info("Sending message");
         topicTemplate.convertAndSend(
                 new TopicMessageChannel(amazonSns, topicArn),

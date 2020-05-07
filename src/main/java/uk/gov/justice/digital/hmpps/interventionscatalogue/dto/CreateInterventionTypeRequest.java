@@ -6,17 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CreateInterventionTypeRequest {
-    @NonNull
+    @NotNull
     private String name;
 
-    @NonNull
+    @NotNull
     private String deliusCode;
 
-    @NonNull
+    @NotNull
     private Boolean active;
 }

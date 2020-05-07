@@ -10,11 +10,10 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.util.Set;
 
@@ -34,11 +33,10 @@ public class InterventionType extends BaseEntity {
     private Boolean active;
 
     @Singular
-    @ManyToMany
-    @JoinTable(name = "provider_intervention_type", joinColumns = @JoinColumn(name="intervention_type_id"), inverseJoinColumns = @JoinColumn(name="provider_id"))
-    @EqualsAndHashCode.Exclude()
+    @OneToMany(mappedBy = "interventionType", cascade = CascadeType.ALL, orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Provider> providers;
+    private Set<ProviderInterventionType> providerInterventionTypes;
 
     @Singular
     @OneToMany(mappedBy = "interventionType")

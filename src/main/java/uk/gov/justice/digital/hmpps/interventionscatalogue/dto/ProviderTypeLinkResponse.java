@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.With;
 
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
@@ -15,15 +13,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @With
-public class CreateInterventionSubTypeRequest {
+public class ProviderTypeLinkResponse {
+    private UUID providerId;
     private UUID interventionTypeId;
-
-    @NotNull
-    private String name;
-
-    @NotNull
-    private String deliusCode;
-
-    @NotNull
-    private Boolean active;
+    private String deliusInterventionCode;
+    private String deliusProviderCode;
 }
