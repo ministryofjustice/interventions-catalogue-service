@@ -1,4 +1,4 @@
-# Interventions Catalogue Service
+# Interventions Catalogue Service - ALPHA
 
 [![CircleCI](https://circleci.com/gh/ministryofjustice/interventions-catalogue-service/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/interventions-catalogue-service)
 [![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/interventions-catalogue-service/badge.svg)](https://snyk.io/test/github/ministryofjustice/interventions-catalogue-service)

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionSubTypeRequest;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateInterventionTypeRequest;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTypeLinkRequest;
@@ -30,6 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -177,6 +179,30 @@ class InterventionControllerTest {
                         .interventionTypeId(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"))
                         .build()
                 );
+    }
+
+    @Test
+    void unlinkProviderFromType() throws Exception {
+        when(interventionService.deleteProviderTypeLink(any(UUID.class), any(UUID.class))).thenReturn(new DataEvent<>(ProviderInterventionType.builder()
+                .provider(Provider.builder().id(UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d")).deliusCode("P1").build())
+                .interventionType(InterventionType.builder().id(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f")).deliusCode("IT1").build())
+                .id(
+                        new ProviderInterventionTypeId(
+                                UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"),
+                                UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"))
+                )
+                .build(), DataEventType.CREATED));
+
+        mockMvc.perform(delete("/interventiontype/4b2f8eed-e426-4555-82b5-55ad103c235f/provider/2e18d2f6-2a38-4cdf-a798-00b0a2e6994d")
+                .with(jwt()))
+                .andExpect(content().json("{ \"interventionTypeId\": \"4b2f8eed-e426-4555-82b5-55ad103c235f\", " +
+                                          "\"providerId\": \"2e18d2f6-2a38-4cdf-a798-00b0a2e6994d\", " +
+                                          "\"deliusProviderCode\": \"P1\", " +
+                                          "\"deliusInterventionCode\": \"IT1\"}"));
+
+        verify(interventionService, times(1))
+                .deleteProviderTypeLink(UUID.fromString("4b2f8eed-e426-4555-82b5-55ad103c235f"),
+                                        UUID.fromString("2e18d2f6-2a38-4cdf-a798-00b0a2e6994d"));
     }
 }
 

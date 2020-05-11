@@ -14,6 +14,7 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.Provider;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.model.ProviderInterventionType;
 
 import java.time.LocalDateTime;
 
@@ -43,7 +44,7 @@ public abstract class AutoAvroMapper {
         } else if (entity instanceof InterventionSubType) {
             return mapInterventionSubType((InterventionSubType) entity);
         } else if (entity instanceof ProviderTypeLinkResponse) {
-            return mapProviderTypeLink((ProviderTypeLinkResponse) entity);
+            return mapProviderTypeLink((ProviderInterventionType) entity);
         }
         return null;
     }
@@ -58,7 +59,12 @@ public abstract class AutoAvroMapper {
     @Mapping(source = "interventionType.id", target = "deliusParentNsiCode")
     abstract AvroInterventionSubType mapInterventionSubType(InterventionSubType interventionSubType);
 
-    abstract AvroProviderInterventionLink mapProviderTypeLink(ProviderTypeLinkResponse providerTypeLinkResponse);
+    @Mapping(source = "provider.id", target = "providerId")
+    @Mapping(source = "provider.deliusCode", target = "deliusProviderCode")
+    @Mapping(source = "interventionType.id", target = "interventionTypeId")
+    @Mapping(source = "interventionType.deliusCode", target = "deliusInterventionCode")
+    @Mapping(source = "createdDate", target = "createdTimestamp" )
+    abstract AvroProviderInterventionLink mapProviderTypeLink(ProviderInterventionType providerInterventionType);
 
     String map(java.util.UUID value) {
         return value.toString();

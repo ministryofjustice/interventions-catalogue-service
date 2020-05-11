@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class ProviderInterventionTypeId implements Serializable{
+public class ProviderInterventionTypeId implements Serializable {
     private UUID providerId;
     private UUID interventionTypeId;
 }
