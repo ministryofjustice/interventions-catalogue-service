@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
@@ -13,7 +14,13 @@ import java.util.UUID;
 @Builder
 public class UpdateProviderRequest {
     private UUID id;
+
+    @NotNull
     private String name;
+
+    @NotNull
     private String deliusCode;
+
+    @NotNull
     private Boolean active;
 }

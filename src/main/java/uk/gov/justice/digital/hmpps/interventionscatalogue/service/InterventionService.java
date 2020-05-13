@@ -11,6 +11,8 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.CreateProviderTyp
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEvent;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.DataEventType;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderTypeLinkResponse;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateInterventionSubTypeRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateInterventionTypeRequest;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateProviderRequest;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.event.CreateInterventionDataEvent;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.model.InterventionSubType;
@@ -78,8 +80,11 @@ public class InterventionService {
     @Transactional
     @CreateInterventionDataEvent
     public DataEvent<Provider> deleteProvider(UUID providerId) {
-        providerRepository.deleteById(providerId);
-        return new DataEvent<>(Provider.builder().id(providerId).build(), DataEventType.DELETED);
+        var provider = providerRepository.getOne(providerId);
+        return new DataEvent<>(Provider.builder()
+                .id(providerId)
+                .deliusCode(provider.getDeliusCode())
+                .build(), DataEventType.DELETED);
     }
 
     public Revisions<Long, Provider> getProviderVersions(final UUID providerId) {
@@ -106,6 +111,16 @@ public class InterventionService {
 
     @Transactional
     @CreateInterventionDataEvent
+    public DataEvent<InterventionType> updateInterventionType(final UpdateInterventionTypeRequest updateInterventionTypeRequest) {
+        var existingIntervention = interventionTypeRepository.getOne(updateInterventionTypeRequest.getId());
+        existingIntervention.setActive(updateInterventionTypeRequest.getActive());
+        existingIntervention.setDeliusCode(updateInterventionTypeRequest.getDeliusCode());
+        existingIntervention.setName(updateInterventionTypeRequest.getName());
+
+        return new DataEvent<>(interventionTypeRepository.save(existingIntervention), DataEventType.UPDATED);
+    }
+    @Transactional
+    @CreateInterventionDataEvent
     public DataEvent<InterventionSubType> createInterventionSubType(final CreateInterventionSubTypeRequest createInterventionSubTypeRequest) {
         InterventionType interventionType = interventionTypeRepository
                 .getOne(createInterventionSubTypeRequest.getInterventionTypeId());
@@ -118,6 +133,28 @@ public class InterventionService {
                 .build();
 
         return new DataEvent<>(interventionSubTypeRepository.save(interventionSubType), DataEventType.CREATED);
+    }
+
+    @Transactional
+    @CreateInterventionDataEvent
+    public DataEvent<InterventionSubType> updateInterventionSubType(final UpdateInterventionSubTypeRequest updateInterventionSubTypeRequest) {
+        InterventionType interventionType = interventionTypeRepository
+                .getOne(updateInterventionSubTypeRequest.getInterventionTypeId());
+
+        var interventionSubType = interventionType.getInterventionSubTypes()
+                .stream()
+                .filter(ist -> ist.getId().equals(updateInterventionSubTypeRequest.getId()))
+                .findFirst();
+
+        if (interventionSubType.isPresent()) {
+            var subType = interventionSubType.get();
+            subType.setActive(updateInterventionSubTypeRequest.getActive());
+            subType.setName(updateInterventionSubTypeRequest.getName());
+            subType.setDeliusCode(updateInterventionSubTypeRequest.getDeliusCode());
+
+            return new DataEvent<>(interventionSubTypeRepository.save(subType), DataEventType.UPDATED);
+        }
+        throw new RuntimeException("Couldn't find intervention sub type to update");
     }
 
     @Transactional
@@ -160,7 +197,7 @@ public class InterventionService {
 
             return new DataEvent<>(providerInterventionType.get(), DataEventType.DELETED);
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Link does not exist to be deleted");
     }
 
     @Transactional
@@ -183,7 +220,9 @@ public class InterventionService {
     public DataEvent<InterventionType> deleteInterventionType(final UUID interventionTypeId) {
         InterventionType interventionType = interventionTypeRepository.findLastChangeRevision(interventionTypeId).get().getEntity();
         interventionTypeRepository.delete(interventionType);
-        return new DataEvent<>(InterventionType.builder().id(interventionTypeId)
+        return new DataEvent<>(InterventionType.builder()
+                .id(interventionTypeId)
+                .deliusCode(interventionType.getDeliusCode())
                 .createdDate(interventionType.getCreatedDate()).build(), DataEventType.DELETED);
     }
 }

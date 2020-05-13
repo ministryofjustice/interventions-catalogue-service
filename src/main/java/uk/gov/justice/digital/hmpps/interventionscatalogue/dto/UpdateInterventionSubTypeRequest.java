@@ -2,22 +2,19 @@ package uk.gov.justice.digital.hmpps.interventionscatalogue.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.With;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class CreateInterventionTypeRequest {
-    @NotNull
-    private String name;
-
-    @NotNull
-    private String deliusCode;
-
-    @NotNull
-    private Boolean active;
+@With
+@EqualsAndHashCode(callSuper=true)
+public class UpdateInterventionSubTypeRequest extends CreateInterventionSubTypeRequest {
+    private UUID id;
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,8 @@ import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionSubTy
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.InterventionTypeResponse;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderDto;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.ProviderTypeLinkResponse;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateInterventionSubTypeRequest;
+import uk.gov.justice.digital.hmpps.interventionscatalogue.dto.UpdateInterventionTypeRequest;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.mappers.ProviderMapper;
 import uk.gov.justice.digital.hmpps.interventionscatalogue.service.InterventionService;
 
@@ -48,6 +51,12 @@ class InterventionController {
         return ProviderMapper.INSTANCE.map(interventionService.createInterventionType(createInterventionTypeRequest).getEntity());
     }
 
+    @PutMapping(path="{interventionTypeId}")
+    InterventionTypeResponse updateIntervention(@PathVariable("interventionTypeId") UUID interventionTypeId, @RequestBody @Valid UpdateInterventionTypeRequest updateInterventionTypeRequest) {
+        updateInterventionTypeRequest.setId(interventionTypeId);
+        return ProviderMapper.INSTANCE.map(interventionService.updateInterventionType(updateInterventionTypeRequest).getEntity());
+    }
+
     @DeleteMapping(path="{interventionTypeId}")
     void deleteType(@PathVariable("interventionTypeId") UUID interventionTypeId) {
         interventionService.deleteInterventionType(interventionTypeId);
@@ -66,6 +75,18 @@ class InterventionController {
                 .withInterventionTypeId(interventionTypeId))
                 .getEntity());
     }
+
+    @PutMapping(path="{interventionTypeId}/subtype/{subtypeId}")
+    InterventionSubTypeResponse updateSubType(@PathVariable("interventionTypeId") UUID interventionTypeId,
+                                              @PathVariable("subtypeId") UUID subtypeId,
+                                              @RequestBody @Valid UpdateInterventionSubTypeRequest updateInterventionSubTypeRequest) {
+
+        updateInterventionSubTypeRequest.setInterventionTypeId(interventionTypeId);
+        updateInterventionSubTypeRequest.setId(subtypeId);
+        return ProviderMapper.INSTANCE.map(interventionService.updateInterventionSubType(updateInterventionSubTypeRequest)
+                .getEntity());
+    }
+
 
     @DeleteMapping(path="{interventionTypeId}/subtype/{subtypeId}")
     InterventionSubTypeResponse deleteSubtypeFromType(@PathVariable("interventionTypeId") UUID interventionTypeId,

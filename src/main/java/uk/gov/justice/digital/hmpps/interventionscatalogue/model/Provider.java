@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -35,5 +36,6 @@ public class Provider extends BaseEntity {
     @Singular
     @OneToMany(mappedBy = "provider")
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     protected Set<ProviderInterventionType> providerInterventionTypes;
 }

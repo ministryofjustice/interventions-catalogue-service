@@ -43,7 +43,7 @@ public abstract class AutoAvroMapper {
             return mapInterventionType((InterventionType) entity);
         } else if (entity instanceof InterventionSubType) {
             return mapInterventionSubType((InterventionSubType) entity);
-        } else if (entity instanceof ProviderTypeLinkResponse) {
+        } else if (entity instanceof ProviderInterventionType) {
             return mapProviderTypeLink((ProviderInterventionType) entity);
         }
         return null;
@@ -56,7 +56,7 @@ public abstract class AutoAvroMapper {
     abstract AvroInterventionType mapInterventionType(InterventionType interventionType);
 
     @Mapping(source = "createdDate", target = "createdTimestamp" )
-    @Mapping(source = "interventionType.id", target = "deliusParentNsiCode")
+    @Mapping(source = "interventionType.deliusCode", target = "deliusParentNsiCode")
     abstract AvroInterventionSubType mapInterventionSubType(InterventionSubType interventionSubType);
 
     @Mapping(source = "provider.id", target = "providerId")
