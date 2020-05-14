@@ -64,4 +64,4 @@ cloud:
     region:
       static: eu-west-2
 interventions:
-  repositoryevents: false
+  snsEnabled: false

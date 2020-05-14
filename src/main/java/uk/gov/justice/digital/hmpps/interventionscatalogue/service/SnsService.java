@@ -19,6 +19,8 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class SnsService {
+    @Value( "${interventions.snsEnabled:false}" )
+    private Boolean snsEnabled;
 
     private final NotificationMessagingTemplate topicTemplate;
     private final AmazonSNSAsync amazonSns;
@@ -36,10 +38,12 @@ public class SnsService {
     }
 
     public void sendEvent(final DataEvent<? extends DataEntity> payload) throws IOException {
-        log.info("Sending message");
-        topicTemplate.convertAndSend(
-                new TopicMessageChannel(amazonSns, topicArn),
-                avroSerializer.serializeAvroDataEventToJSON(AutoAvroMapper.INSTANCE.map(payload))
-        );
+        if (snsEnabled) {
+            log.info("Sending message");
+            topicTemplate.convertAndSend(
+                    new TopicMessageChannel(amazonSns, topicArn),
+                    avroSerializer.serializeAvroDataEventToJSON(AutoAvroMapper.INSTANCE.map(payload))
+            );
+        }
     }
 }
