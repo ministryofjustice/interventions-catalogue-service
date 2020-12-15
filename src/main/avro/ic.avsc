@@ -1,0 +1,121 @@
+{
+  "type" : "record",
+  "name" : "AvroDataEvent",
+  "namespace" : "uk.gov.justice.digital.hmpps.interventionscatalogue.avro",
+  "fields" : [ {
+    "name" : "eventType",
+    "type" : {
+      "type" : "enum",
+      "name" : "EventType",
+      "symbols" : [ "CREATED", "UPDATED", "DELETED" ]
+    }
+  }, {
+    "name" : "entity",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AvroProvider",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "string"
+      }, {
+        "name" : "active",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "deliusCode",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "createdTimestamp",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "version",
+        "type" : "int"
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
+    }, {
+      "type" : "record",
+      "name" : "AvroInterventionType",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "string"
+      }, {
+        "name" : "active",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "deliusCode",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "createdTimestamp",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "version",
+        "type" : "int"
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
+    }, {
+      "type" : "record",
+      "name" : "AvroInterventionSubType",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "string"
+      }, {
+        "name" : "active",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "deliusCode",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "deliusParentNsiCode",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "createdTimestamp",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "version",
+        "type" : "int"
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
+    }, {
+      "type" : "record",
+      "name" : "AvroProviderInterventionLink",
+      "fields" : [ {
+        "name" : "providerId",
+        "type" : "string"
+      }, {
+        "name" : "interventionTypeId",
+        "type" : "string"
+      }, {
+        "name" : "deliusInterventionCode",
+        "type" : "string"
+      }, {
+        "name" : "deliusProviderCode",
+        "type" : "string"
+      }, {
+        "name" : "createdTimestamp",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "version",
+        "type" : "int"
+      } ]
+    } ]
+  } ]
+}

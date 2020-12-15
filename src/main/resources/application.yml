@@ -25,6 +25,8 @@ spring:
     show-sql: true
     properties:
       hibernate:
+#        envers:
+#          do_not_audit_optimistic_locking_field: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           lob:
@@ -41,3 +43,25 @@ logging:
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+sns:
+  endpoint:
+    url: http://localhost:4575
+  topic:
+    arn: arn:aws:sns:eu-west-2:000000000000:interventions_event
+  provider: localstack
+#  aws:
+#    access:
+#      key:
+#        id:
+#    secret:
+#      access:
+#        key:
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: eu-west-2
+interventions:
+  snsEnabled: false
